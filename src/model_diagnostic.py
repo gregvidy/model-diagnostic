@@ -76,46 +76,128 @@ class TestSuite:
             if model is not None:
                 self._determine_model_type()
 
-    def set_data(self, data, target_col=None, test_size=0.2):
+    def set_data(self, data, pipeline=None, target_col=None, test_size=0.2):
         """
         Set or update the data used for diagnostics.
 
+        If a raw DataFrame is provided, it will be split and fully preprocessed
+        via the given pipeline before storage. If a dict is provided,
+        it must contain 'X_train','X_test','y_train','y_test' and will be
+        transformed via the pipeline's preprocessor first.
+
         Parameters
         ----------
-        data : pandas.DataFrame or Dict
-            The dataset to use for diagnostics. If a DataFrame is provided, it will be
-            automatically split into train and test sets. If a dictionary, it should contain
-            'train', 'test', and optionally 'main' DataFrames.
-
+        data : pandas.DataFrame or dict
+            Raw DataFrame to transform or dict of existing splits.
+        pipeline : ModelPipeline or sklearn Pipeline, optional
+            Pipeline used to preprocess data. Required.
         target_col : str, optional
-            The name of the target column. If not provided, will attempt to infer from
-            common target column names or use the last column.
-
-        test_size : float, optional
-            The proportion of the dataset to use for testing when splitting the data.
-            Only used if data is provided as a DataFrame. Default is 0.2.
+            Name of the target column. If not provided, inferred.
+        test_size : float, default=0.2
+            Fraction for test split when data is DataFrame.
         """
-        # Handle data input
-        if isinstance(data, dict):
-            train_df = pd.concat([data["X_train"], data["y_train"]], axis=1)
-            test_df = pd.concat([data["X_test"], data["y_test"]], axis=1)
-            concat_df = pd.concat([df_train, df_test], axis=0).sort_index()
-            self.data = {"main": concat_df, "train": train_df, "test": test_df}
+        import pandas as pd
+
+        # Ensure pipeline provided
+        if pipeline is None:
+            raise ValueError('A pipeline must be provided for preprocessing')
+
+        # Determine full pipeline
+        full_pipe = pipeline.get_pipeline() if hasattr(pipeline, 'get_pipeline') else pipeline
+
+        # Extract preprocessor step
+        if hasattr(full_pipe, 'named_steps') and 'preprocessor' in full_pipe.named_steps:
+            preproc = full_pipe.named_steps['preprocessor']
         else:
             raise ValueError(
-                "Data must be either a dictionary of DataFrames or a DataFrame"
+                'Pipeline must expose a preprocessor step via named_steps["preprocessor"]'
             )
 
-        # Set target column if provided, or try to infer
-        self.target_col = target_col
-        if self.target_col is None:
-            self._infer_target_column()
+        # Case 1: existing splits dict
+        if isinstance(data, dict):
+            # Set target column
+            if target_col:
+                self.target_col = target_col
+            elif not hasattr(self, 'target_col') or self.target_col is None:
+                self.target_col = data['y_train'].name
 
-        # Infer feature columns
+            feat_names = preproc.get_feature_names_out()
+            # Transform features
+            X_train_p = preproc.transform(data['X_train'])
+            X_test_p = preproc.transform(data['X_test'])
+
+            # Rebuild DataFrames
+            train_df = pd.DataFrame(
+                X_train_p, columns=feat_names,
+                index=data['X_train'].index
+            )
+            train_df[self.target_col] = data['y_train'].values
+
+            test_df = pd.DataFrame(
+                X_test_p, columns=feat_names,
+                index=data['X_test'].index
+            )
+            test_df[self.target_col] = data['y_test'].values
+
+            main_df = pd.concat([train_df, test_df], axis=0).sort_index()
+            self.data = {'main': main_df, 'train': train_df, 'test': test_df}
+
+        # Case 2: raw DataFrame
+        elif isinstance(data, pd.DataFrame):
+            # Set target column
+            if target_col:
+                self.target_col = target_col
+            elif not hasattr(self, 'target_col') or self.target_col is None:
+                self.target_col = self._infer_target_column(data)
+
+            # Prepare raw X, y via custom pipeline if available
+            if hasattr(pipeline, 'prepare_data'):
+                X, y, num_cols, cat_cols = pipeline.prepare_data(
+                    df=data, target_column=self.target_col
+                )
+                splits = pipeline.split_data(X, y, test_size=test_size)
+            else:
+                from sklearn.model_selection import train_test_split
+                X = data.drop(columns=[self.target_col])
+                y = data[self.target_col]
+                train_all, test_all = train_test_split(
+                    data, test_size=test_size, stratify=y, random_state=0
+                )
+                splits = {
+                    'X_train': train_all.drop(columns=[self.target_col]),
+                    'y_train': train_all[self.target_col],
+                    'X_test': test_all.drop(columns=[self.target_col]),
+                    'y_test': test_all[self.target_col]
+                }
+
+            feat_names = preproc.get_feature_names_out()
+            X_train_p = preproc.transform(splits['X_train'])
+            X_test_p = preproc.transform(splits['X_test'])
+
+            train_df = pd.DataFrame(
+                X_train_p, columns=feat_names,
+                index=splits['X_train'].index
+            )
+            train_df[self.target_col] = splits['y_train'].values
+
+            test_df = pd.DataFrame(
+                X_test_p, columns=feat_names,
+                index=splits['X_test'].index
+            )
+            test_df[self.target_col] = splits['y_test'].values
+
+            main_df = pd.concat([train_df, test_df], axis=0).sort_index()
+            self.data = {'main': main_df, 'train': train_df, 'test': test_df}
+
+        else:
+            raise ValueError('Data must be dict of splits or pandas DataFrame')
+
+        # Infer and set metadata
+        self._infer_target_column()
         self._infer_feature_columns()
 
-        # Determine model type if model is already set
-        if hasattr(self, "model") and self.model is not None:
+        # Update model type if present
+        if hasattr(self, 'model') and self.model is not None:
             self._determine_model_type()
 
     def set_model(self, model):
