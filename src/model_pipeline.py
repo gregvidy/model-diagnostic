@@ -34,6 +34,7 @@ class ModelPipeline:
         self.random_state = random_state
         self.model = self._get_model(model_type)
         self.pipeline = None
+        self.preprocessor = None
         self.cv_scores = None
 
     def _get_model(self, model_type):
@@ -75,8 +76,8 @@ class ModelPipeline:
         --------
         X : pd.DataFrame of features
         y : pd.Series target
-        numerical_columns : list of numeric feature names
-        categorical_columns : list of categorical feature names
+        numerical_columns : list
+        categorical_columns : list
         """
         data = df.copy()
         if target_column not in data:
@@ -105,19 +106,7 @@ class ModelPipeline:
 
     def split_data(self, X, y, test_size=0.3):
         """
-        Split features and target into train/test sets.
-
-        Parameters:
-        -----------
-        X : pd.DataFrame of features
-        y : pd.Series or array of target
-        test_size : float, default=0.3
-            Proportion of data to allocate to the test set.
-
-        Returns:
-        --------
-        dict with keys:
-          - 'X_train', 'X_test', 'y_train', 'y_test'
+        Return dict of train/test splits.
         """
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, stratify=y, random_state=self.random_state
@@ -131,7 +120,7 @@ class ModelPipeline:
 
     def build_pipeline(self, numerical_columns, categorical_columns):
         """
-        Construct preprocessing and modeling pipeline.
+        Construct preprocessing + classifier pipeline.
         """
         num_trans = Pipeline([("scaler", StandardScaler())])
         cat_trans = Pipeline(
@@ -142,29 +131,31 @@ class ModelPipeline:
             transformers.append(("num", num_trans, numerical_columns))
         if categorical_columns:
             transformers.append(("cat", cat_trans, categorical_columns))
-        preprocessor = ColumnTransformer(transformers=transformers, remainder="drop")
+        self.preprocessor = ColumnTransformer(
+            transformers=transformers, remainder="drop"
+        )
         self.pipeline = Pipeline(
-            [("preprocessor", preprocessor), ("classifier", self.model)]
+            [("preprocessor", self.preprocessor), ("classifier", self.model)]
         )
 
     def train(self, X_train, y_train, show_training_log=False):
         """
-        Fit the pipeline on training data.
+        Fit pipeline.
         """
         if self.pipeline is None:
-            raise RuntimeError("Pipeline not built. Call build_pipeline first.")
+            raise RuntimeError("Pipeline not built.")
         if show_training_log and self.model_type == "xgboost":
-            fit_params = {
+            params = {
                 "classifier__eval_set": [(X_train, y_train)],
                 "classifier__verbose": True,
             }
-            self.pipeline.fit(X_train, y_train, **fit_params)
+            self.pipeline.fit(X_train, y_train, **params)
         else:
             self.pipeline.fit(X_train, y_train)
 
     def evaluate(self, X_test, y_test):
         """
-        Evaluate model on test data and print metrics.
+        Print accuracy, AUC, report.
         """
         y_pred = self.pipeline.predict(X_test)
         y_prob = self.pipeline.predict_proba(X_test)[:, 1]
@@ -178,46 +169,58 @@ class ModelPipeline:
 
     def cross_validate(self, X, y, cv=5, scoring="roc_auc"):
         """
-        Perform stratified CV and return scores array.
-        Shows fold-by-fold progress with tqdm.
+        Stratified CV with tqdm.
         """
         skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=self.random_state)
         scores = []
-        for fold, (train_idx, test_idx) in enumerate(
-            tqdm(skf.split(X, y), total=cv, desc="CV folds"), start=1
+        for i, (tr_idx, te_idx) in enumerate(
+            tqdm(skf.split(X, y), total=cv, desc="CV folds"), 1
         ):
-            X_tr, y_tr = X.iloc[train_idx], y.iloc[train_idx]
-            X_te, y_te = X.iloc[test_idx], y.iloc[test_idx]
+            X_tr, y_tr = X.iloc[tr_idx], y.iloc[tr_idx]
+            X_te, y_te = X.iloc[te_idx], y.iloc[te_idx]
             self.pipeline.fit(X_tr, y_tr)
             y_prob = self.pipeline.predict_proba(X_te)[:, 1]
-            score = roc_auc_score(y_te, y_prob)
-            tqdm.write(f"Fold {fold}/{cv} ROC AUC: {score:.4f}")
-            scores.append(score)
+            auc = roc_auc_score(y_te, y_prob)
+            tqdm.write(f"Fold {i}/{cv} AUC: {auc:.4f}")
+            scores.append(auc)
         self.cv_scores = np.array(scores)
         return self.cv_scores
 
     def get_feature_importance(self, X, y):
         """
-        Compute and return feature importances DataFrame.
+        Return DataFrame of importances.
         """
         clf = self.pipeline.named_steps["classifier"]
-        preproc = self.pipeline.named_steps["preprocessor"]
         if hasattr(clf, "feature_importances_"):
-            feature_names = preproc.get_feature_names_out()
+            names = self.preprocessor.get_feature_names_out()
             return pd.DataFrame(
-                {"feature": feature_names, "importance": clf.feature_importances_}
-            ).sort_values("importance", ascending=False)
+                {"feature": names, "importance": clf.feature_importances_}
+            )
         perm = permutation_importance(
             self.pipeline, X, y, n_repeats=5, random_state=self.random_state
         )
-        return pd.DataFrame(
-            {"feature": X.columns, "importance": perm.importances_mean}
-        ).sort_values("importance", ascending=False)
+        return pd.DataFrame({"feature": X.columns, "importance": perm.importances_mean})
 
     def get_model(self):
         """
-        Return the underlying classifier (after training).
+        Return fitted classifier.
         """
         if self.pipeline is None:
-            raise RuntimeError("Pipeline not built or model not trained yet.")
+            raise RuntimeError("Model not trained.")
         return self.pipeline.named_steps["classifier"]
+
+    def get_preprocessor(self):
+        """
+        Return fitted transformer for new data.
+        """
+        if self.preprocessor is None:
+            raise RuntimeError("Preprocessor not set.")
+        return self.preprocessor
+
+    def get_pipeline(self):
+        """
+        Return entire pipeline (transformer + model).
+        """
+        if self.pipeline is None:
+            raise RuntimeError("Pipeline not built.")
+        return self.pipeline
