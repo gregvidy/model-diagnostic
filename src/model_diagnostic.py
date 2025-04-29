@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
 from typing import Dict, List, Optional, Union, Tuple, Any
+from scipy.stats import linregress
 import warnings
 
 
@@ -96,18 +97,21 @@ class TestSuite:
         test_size : float, default=0.2
             Fraction for test split when data is DataFrame.
         """
-        import pandas as pd
-
         # Ensure pipeline provided
         if pipeline is None:
-            raise ValueError('A pipeline must be provided for preprocessing')
+            raise ValueError("A pipeline must be provided for preprocessing")
 
         # Determine full pipeline
-        full_pipe = pipeline.get_pipeline() if hasattr(pipeline, 'get_pipeline') else pipeline
+        full_pipe = (
+            pipeline.get_pipeline() if hasattr(pipeline, "get_pipeline") else pipeline
+        )
 
         # Extract preprocessor step
-        if hasattr(full_pipe, 'named_steps') and 'preprocessor' in full_pipe.named_steps:
-            preproc = full_pipe.named_steps['preprocessor']
+        if (
+            hasattr(full_pipe, "named_steps")
+            and "preprocessor" in full_pipe.named_steps
+        ):
+            preproc = full_pipe.named_steps["preprocessor"]
         else:
             raise ValueError(
                 'Pipeline must expose a preprocessor step via named_steps["preprocessor"]'
@@ -118,86 +122,81 @@ class TestSuite:
             # Set target column
             if target_col:
                 self.target_col = target_col
-            elif not hasattr(self, 'target_col') or self.target_col is None:
-                self.target_col = data['y_train'].name
+            elif not hasattr(self, "target_col") or self.target_col is None:
+                self.target_col = data["y_train"].name
 
             feat_names = preproc.get_feature_names_out()
             # Transform features
-            X_train_p = preproc.transform(data['X_train'])
-            X_test_p = preproc.transform(data['X_test'])
+            X_train_p = preproc.transform(data["X_train"])
+            X_test_p = preproc.transform(data["X_test"])
 
             # Rebuild DataFrames
             train_df = pd.DataFrame(
-                X_train_p, columns=feat_names,
-                index=data['X_train'].index
+                X_train_p, columns=feat_names, index=data["X_train"].index
             )
-            train_df[self.target_col] = data['y_train'].values
+            train_df[self.target_col] = data["y_train"].values
 
             test_df = pd.DataFrame(
-                X_test_p, columns=feat_names,
-                index=data['X_test'].index
+                X_test_p, columns=feat_names, index=data["X_test"].index
             )
-            test_df[self.target_col] = data['y_test'].values
+            test_df[self.target_col] = data["y_test"].values
 
             main_df = pd.concat([train_df, test_df], axis=0).sort_index()
-            self.data = {'main': main_df, 'train': train_df, 'test': test_df}
+            self.data = {"main": main_df, "train": train_df, "test": test_df}
 
         # Case 2: raw DataFrame
         elif isinstance(data, pd.DataFrame):
             # Set target column
             if target_col:
                 self.target_col = target_col
-            elif not hasattr(self, 'target_col') or self.target_col is None:
+            elif not hasattr(self, "target_col") or self.target_col is None:
                 self.target_col = self._infer_target_column(data)
 
             # Prepare raw X, y via custom pipeline if available
-            if hasattr(pipeline, 'prepare_data'):
+            if hasattr(pipeline, "prepare_data"):
                 X, y, num_cols, cat_cols = pipeline.prepare_data(
                     df=data, target_column=self.target_col
                 )
                 splits = pipeline.split_data(X, y, test_size=test_size)
             else:
-                from sklearn.model_selection import train_test_split
                 X = data.drop(columns=[self.target_col])
                 y = data[self.target_col]
                 train_all, test_all = train_test_split(
                     data, test_size=test_size, stratify=y, random_state=0
                 )
                 splits = {
-                    'X_train': train_all.drop(columns=[self.target_col]),
-                    'y_train': train_all[self.target_col],
-                    'X_test': test_all.drop(columns=[self.target_col]),
-                    'y_test': test_all[self.target_col]
+                    "X_train": train_all.drop(columns=[self.target_col]),
+                    "y_train": train_all[self.target_col],
+                    "X_test": test_all.drop(columns=[self.target_col]),
+                    "y_test": test_all[self.target_col],
                 }
 
             feat_names = preproc.get_feature_names_out()
-            X_train_p = preproc.transform(splits['X_train'])
-            X_test_p = preproc.transform(splits['X_test'])
+            X_train_p = preproc.transform(splits["X_train"])
+            X_test_p = preproc.transform(splits["X_test"])
 
             train_df = pd.DataFrame(
-                X_train_p, columns=feat_names,
-                index=splits['X_train'].index
+                X_train_p, columns=feat_names, index=splits["X_train"].index
             )
-            train_df[self.target_col] = splits['y_train'].values
+            train_df[self.target_col] = splits["y_train"].values
 
             test_df = pd.DataFrame(
-                X_test_p, columns=feat_names,
-                index=splits['X_test'].index
+                X_test_p, columns=feat_names, index=splits["X_test"].index
             )
-            test_df[self.target_col] = splits['y_test'].values
+            test_df[self.target_col] = splits["y_test"].values
 
             main_df = pd.concat([train_df, test_df], axis=0).sort_index()
-            self.data = {'main': main_df, 'train': train_df, 'test': test_df}
+            self.data = {"main": main_df, "train": train_df, "test": test_df}
 
         else:
-            raise ValueError('Data must be dict of splits or pandas DataFrame')
+            raise ValueError("Data must be dict of splits or pandas DataFrame")
 
         # Infer and set metadata
         self._infer_target_column()
         self._infer_feature_columns()
 
         # Update model type if present
-        if hasattr(self, 'model') and self.model is not None:
+        if hasattr(self, "model") and self.model is not None:
             self._determine_model_type()
 
     def set_model(self, model):
@@ -417,8 +416,6 @@ class TestSuite:
         # Add residual trend line if enough points
         if len(x_values) > 10:
             try:
-                from scipy.stats import linregress
-
                 slope, intercept, r_value, p_value, std_err = linregress(
                     x_values, residuals
                 )

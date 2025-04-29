@@ -9,4 +9,6 @@ lightgbm
 tqdm
 scipy
 black
+black[jupyter]
 ucimlrepo
+ipykernel
