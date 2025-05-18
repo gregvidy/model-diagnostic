@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from functools import reduce
 from typing import Optional, List, Dict
 
 
@@ -55,6 +56,7 @@ def calculate_frequency(
             .reset_index()
         )
 
+    df_num_trnx.rename(columns={amount_col: out_col}, inplace=True)
     df_num_trnx = df_num_trnx.drop_duplicates(
         subset=[groupby, datetime_col], keep="last"
     )
@@ -115,6 +117,7 @@ def calculate_monetary(
             .reset_index()
         )
 
+    df_amt_trnx.rename(columns={amount_col: out_col}, inplace=True)
     df_amt_trnx = df_amt_trnx.drop_duplicates(
         subset=[groupby, datetime_col], keep="last"
     )
@@ -157,6 +160,7 @@ def calculate_unique_count(
         .fillna(na_value)
         .reset_index()
     )
+    df_num.rename(columns={count_col: out_col}, inplace=True)
     df_num = df_num.drop_duplicates(subset=[groupby, datetime_col], keep="last")
     df_output = dataset.merge(df_num, on=[groupby, datetime_col], how="left")
     return df_output[[groupby, datetime_col, out_col]]
@@ -247,6 +251,7 @@ def calculate_monetary_max(
             .reset_index()
         )
 
+    df_amt_trnx.rename(columns={amount_col: out_col}, inplace=True)
     df_amt_trnx = df_amt_trnx.drop_duplicates(
         subset=[groupby, datetime_col], keep="last"
     )
@@ -255,10 +260,101 @@ def calculate_monetary_max(
     return join_data[[key, groupby, datetime_col, out_col]]
 
 
-# Example usage:
-# df = pd.read_csv('your_data.csv')
-# frequency_df = calculate_frequency(df, 'date', 'id', 'group', 'amount')
-# monetary_df = calculate_monetary(df, 'date', 'id', 'group', 'amount')
-# unique_count_df = calculate_unique_count(df, 'date', 'transaction_id', 'group')
-# time_diff_df = calculate_time_differences(df)
-# monetary_max_df = calculate_monetary_max(df, 'date', 'id', 'group', 'amount')
+# Generate rolling features:
+def generate_rolling_features(
+    df: pd.DataFrame,
+    datetime_col: str,
+    key_col: str,
+    features_config: List[Dict]
+) -> pd.DataFrame:
+    """
+    Generate rolling window features (frequency, unique count, monetary, monetary_max) based on configuration.
+
+    Parameters:
+    - df: Input DataFrame
+    - datetime_col: Name of the datetime column
+    - key_col: Unique transaction identifier column
+    - features_config: List of feature configurations
+
+    Returns:
+    - DataFrame with all rolling features merged
+    """
+    all_feature_dfs = []
+
+    for config in features_config:
+        feature_type = config["type"]
+        groupby = config["groupby"]
+        windows = config["windows"]
+        groupby_type = config.get("groupby_type", "No")
+        groupby_col = config.get("groupby_col", None)
+        na_value = config.get("na_value", 0)
+
+        for window, out_col in windows.items():
+            if feature_type == "frequency":
+                feature_df = calculate_frequency(
+                    dataset=df,
+                    datetime_col=datetime_col,
+                    key=key_col,
+                    groupby=groupby,
+                    amount_col=config["amount_col"],
+                    groupby_type=groupby_type,
+                    groupby_col=groupby_col,
+                    window=window,
+                    na_value=na_value,
+                    out_col=out_col
+                )
+            elif feature_type == "unique":
+                feature_df = calculate_unique_count(
+                    dataset=df,
+                    datetime_col=datetime_col,
+                    count_col=config["count_col"],
+                    groupby=groupby,
+                    window=window,
+                    na_value=na_value,
+                    out_col=out_col
+                )
+            elif feature_type == "monetary":
+                feature_df = calculate_monetary(
+                    dataset=df,
+                    datetime_col=datetime_col,
+                    key=key_col,
+                    groupby=groupby,
+                    amount_col=config["amount_col"],
+                    groupby_type=groupby_type,
+                    groupby_col=groupby_col,
+                    window=window,
+                    na_value=na_value,
+                    out_col=out_col
+                )
+            elif feature_type == "monetary_max":
+                feature_df = calculate_monetary_max(
+                    dataset=df,
+                    datetime_col=datetime_col,
+                    key=key_col,
+                    groupby=groupby,
+                    amount_col=config["amount_col"],
+                    groupby_type=groupby_type,
+                    groupby_col=groupby_col,
+                    window=window,
+                    na_value=na_value,
+                    out_col=out_col
+                )
+            else:
+                raise ValueError(f"Unsupported feature type: {feature_type}")
+
+            all_feature_dfs.append(feature_df)
+
+    # Merge all features into the original DataFrame
+    df_merged = reduce(
+        lambda left, right: pd.merge(
+            left, right,
+            on=[key_col, config["groupby"], datetime_col],
+            how="left"
+        ),
+        [df] + all_feature_dfs
+    )
+
+    return df_merged
+
+# example usage
+# df = generate_rolling_features(df, datetime_col="transaction_datetime", key_col="transaction_id", features_config=features_config)
