@@ -46,7 +46,9 @@ class ModelPipeline:
                 max_iter=1000, random_state=self.random_state
             ),
             "random_forest": RandomForestClassifier(
-                n_estimators=100, random_state=self.random_state, class_weight='balanced_subsample'
+                n_estimators=100,
+                random_state=self.random_state,
+                class_weight="balanced_subsample",
             ),
             "gradient_boosting": GradientBoostingClassifier(
                 random_state=self.random_state
