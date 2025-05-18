@@ -150,20 +150,28 @@ def calculate_unique_count(
     Returns:
     - pd.DataFrame with unique count of transactions
     """
+    # Ensure input is sorted by datetime
     dataset = dataset.sort_values(by=datetime_col, ascending=True)
+
+    # Compute rolling unique counts per group
     df_num = (
         dataset.set_index(datetime_col)
         .sort_index()
         .groupby(groupby)[count_col]
-        .rolling(window, closed="left", min_periods=1)
+        .rolling(window=window, closed="left", min_periods=1)
         .apply(lambda x: np.unique(x[~np.isnan(x)]).size, raw=True)
         .fillna(na_value)
         .reset_index()
     )
+
+    # Rename and merge result
     df_num.rename(columns={count_col: out_col}, inplace=True)
     df_num = df_num.drop_duplicates(subset=[groupby, datetime_col], keep="last")
+
+    # Merge with original dataset to preserve all columns, including key_col
     df_output = dataset.merge(df_num, on=[groupby, datetime_col], how="left")
-    return df_output[[groupby, datetime_col, out_col]]
+
+    return df_output
 
 
 def calculate_time_differences(
@@ -262,10 +270,7 @@ def calculate_monetary_max(
 
 # Generate rolling features:
 def generate_rolling_features(
-    df: pd.DataFrame,
-    datetime_col: str,
-    key_col: str,
-    features_config: List[Dict]
+    df: pd.DataFrame, datetime_col: str, key_col: str, features_config: List[Dict]
 ) -> pd.DataFrame:
     """
     Generate rolling window features (frequency, unique count, monetary, monetary_max) based on configuration.
@@ -301,7 +306,7 @@ def generate_rolling_features(
                     groupby_col=groupby_col,
                     window=window,
                     na_value=na_value,
-                    out_col=out_col
+                    out_col=out_col,
                 )
             elif feature_type == "unique":
                 feature_df = calculate_unique_count(
@@ -311,7 +316,7 @@ def generate_rolling_features(
                     groupby=groupby,
                     window=window,
                     na_value=na_value,
-                    out_col=out_col
+                    out_col=out_col,
                 )
             elif feature_type == "monetary":
                 feature_df = calculate_monetary(
@@ -324,7 +329,7 @@ def generate_rolling_features(
                     groupby_col=groupby_col,
                     window=window,
                     na_value=na_value,
-                    out_col=out_col
+                    out_col=out_col,
                 )
             elif feature_type == "monetary_max":
                 feature_df = calculate_monetary_max(
@@ -337,24 +342,25 @@ def generate_rolling_features(
                     groupby_col=groupby_col,
                     window=window,
                     na_value=na_value,
-                    out_col=out_col
+                    out_col=out_col,
                 )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
 
-            all_feature_dfs.append(feature_df)
+            all_feature_dfs.append((feature_df, [key_col, groupby, datetime_col]))
 
-    # Merge all features into the original DataFrame
-    df_merged = reduce(
-        lambda left, right: pd.merge(
-            left, right,
-            on=[key_col, config["groupby"], datetime_col],
-            how="left"
-        ),
-        [df] + all_feature_dfs
-    )
+    # Merge all features with original df using appropriate keys
+    df_merged = df
+    for feat_df, merge_keys in all_feature_dfs:
+        df_merged = pd.merge(
+            df_merged,
+            feat_df[[*merge_keys, feat_df.columns[-1]]],
+            on=merge_keys,
+            how="left",
+        )
 
     return df_merged
+
 
 # example usage
 # df = generate_rolling_features(df, datetime_col="transaction_datetime", key_col="transaction_id", features_config=features_config)
