@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from tqdm.auto import tqdm  # progress bars
+import xgboost as xgb
+from tqdm.auto import tqdm
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
@@ -9,7 +10,6 @@ from sklearn.metrics import accuracy_score, roc_auc_score, classification_report
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-import xgboost as xgb
 from sklearn.inspection import permutation_importance
 
 
@@ -46,13 +46,13 @@ class ModelPipeline:
                 max_iter=1000, random_state=self.random_state
             ),
             "random_forest": RandomForestClassifier(
-                n_estimators=100, random_state=self.random_state
+                n_estimators=100, random_state=self.random_state, class_weight='balanced_subsample'
             ),
             "gradient_boosting": GradientBoostingClassifier(
                 random_state=self.random_state
             ),
             "xgboost": xgb.XGBClassifier(
-                n_estimators=100,
+                n_estimators=1000,
                 use_label_encoder=False,
                 eval_metric="logloss",
                 random_state=self.random_state,
