@@ -1,0 +1,931 @@
+﻿Code;Description;Transaction Category Code;MCC Category
+"0000";Not Populated — Internal Transaction;All Other Merchants/Post Exchange;Other
+"0742";Veterinary Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"0763";Agricultural Cooperatives;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"0780";Landscaping and Horticultural Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"1520";General Contractor/Residential Building;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1711";Heating, Plumbing, Air Conditioning Contractors;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1731";Electrical Contractors;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1740";Masonry, Stonework, Tile Setting, Plastering, Insulation Contractors;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1750";Carpentry;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1761";Roof, Siding, and Sheet Metal Work Contractors;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1771";Contractors, Concrete;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"1799";Special Trade Contractor — Not Elsewhere Classified;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"2741";Miscellaneous Publishing and Printing Services;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"2791";Typesetting, Plate Making and Related Services (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"2842";Specialty Cleaning, Polishing and Sanitation Preparations (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"3000";United Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3001";American Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3002";Pan American;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3003";Eurofly Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3004";Dragon Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3005";British Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3006";Japan Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3007";Air France;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3008";Lufthansa;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3009";Air Canada;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3010";KLM;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3011";AeroFlot;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3012";Qantas;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3013";Alitalia;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3014";Saudi Arabian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3015";Swiss International Airlines — SWISSINTLAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3016";SAS;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3017";South African Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3018";Varig (Brazil);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3019";German Wings;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3020";Air India;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3021";Air Algerie;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3022";PAL AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3023";Mexicana;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3024";Pakistan International;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3025";Air New Zealand Ltd.;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3026";Emirates Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3027";UTA/InterAir;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3028";Air Malta;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3029";SN Brussels Airlines — SN BRUSSELS;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3030";Aerolineas Argentinas;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3031";Olympic Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3032";El Al;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3033";Ansett Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3034";ETIHADAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3035";TAP (Portugal);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3036";VASP (Brazil);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3037";Egyptair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3038";Kuwait Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3039";Avianca;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3040";Gulf Air (Bahrain);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3041";Balkan-Bulgarian;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3042";Finnair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3043";Aer Lingus;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3044";Air Lanka;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3045";Nigeria Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3046";Cruzeiro do Sul (Bra);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3047";THY (Turkey);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3048";Royal Air Maroc;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3049";Tunis Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3050";Icelandair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3051";Austrian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3052";LANAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3053";AVIACO (Spain);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3054";Ladeco (Chile);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3055";LAB (Bolivia);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3056";QUEBECAIRE;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3057";EASTWEST AIRLINES (AUSTRALIA);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3058";Delta;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3059";DBA Airlines — DBA AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3060";NWA Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3061";Continental;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3062";Hapag-Lloyd Express — HLX;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3063";US Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3064";Adria Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3065";Airinter (AirInternational);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3066";Southwest;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3067";Vanguard Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3068";AIR STANA;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3069";Air Europe;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3070";Pacific Southwest Airlines (PSA);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3071";Air British Columbia;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3072";CEBU PAC;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3073";Air Cal;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3075";Singapore Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3076";Aeromexico;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3077";Thai Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3078";China Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3079";Jetstar Airways — Jetstar;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3081";NORDAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3082";Korean Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3083";Air Afrique;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3084";Eva Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3085";Midwest Express Airlines, Inc;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3086";Carnival Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3087";Metro Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3088";CROATIA AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3089";Tans Saero;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3090";Uni Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3094";Zambia Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3096";Air Zimbabwe;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3097";Spanair (abbreviation: SPANAIR);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3098";Asiana Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3099";Cathay Pacific;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3100";Malaysian Airline System;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3102";Iberia;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3103";Garuda (Indonesia);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3105";Piedmont;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3106";Braathens S.A.F.E. (Norway);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3110";Wings Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3111";British Midland;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3112";Windward Island;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3115";Tower Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3117";Venezolana Int de Aviacion;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3118";Valley Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3125";Tan Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3126";Talair PTY Ltd;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3127";Taca International;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3129";Surinam Airway;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3130";Sunworld International Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3131";VLM Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3132";Frontier Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3133";SUNBELT AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3135";Sudan Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3136";Qatar Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3137";SINGLETON;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3138";SIMMONS AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3141";Seair Alaska;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3143";SIMMONS AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3144";Virgin Atlantic;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3145";SAN JUAN AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3146";Luxair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3148";Air Littoral SA;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3151";Air Zaire;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3154";SAN JUAN AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3156";Go Fly;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3159";PBA — Provincetwn-Bstn Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3161";All Nippon Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3164";Norontair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3167";Aero Continente — AEROCONTINENTE;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3170";NOUNT COOK;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3171";Canadian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3172";Nation Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3174";JetBlue Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3175";Middle East Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3176";METROFLIGHT AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3177";AirTran Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3178";Mesa Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3180";Westjet Airlines — WESTJET;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3181";Malev Hungarian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3182";LOT (Poland);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3183";Oman Aviation — OMAN AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3184";LIAT;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3185";LAV (Venezuela);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3186";LAP (Paraguay);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3187";LACSA (Costa Rica);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3188";Virgin Express — VIR EXP;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3190";Jugoslav Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3191";Island Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3192";IRAN AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3193";Indian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3195";Holiday Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3196";Hawaiian Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3197";Havasu Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3198";Harbor Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3199";Servicios Aereos Militares;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3200";Guyana Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3203";GOLDEN PACIFIC AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3204";Freedom Air;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3206";China Eastern Airlines (Abbr: China East Air);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3207";Empresa Ecuatoriana;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3211";Norwegian Air Shuttle — NORWEGIANAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3212";Dominicana de Aviacion;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3213";Malmo Aviation — MALMO AV;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3215";DAN AIR SERVICES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3216";CUMBERLAND AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3217";CSA — Ceskoslovenske Aeroln;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3219";Copa;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3220";Compania Faucett;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3221";Transportes Aeros Mil;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3222";Command Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3223";Comair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3226";Skyways Air — SKYWAYS;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3228";SAETA;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3229";SAETA SOCIAEDAD ECUATORIANOS DE TRANSPORTES AEREOS;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3231";SAHSA;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3233";CAPITOL AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3234";CARIBAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3235";BROKWAY AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3236";Air Arabia Airlines — Air Arab;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3238";BEMIDJI AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3239";Bar Harbor Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3240";Bahamasair;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3241";Aviateca (Guatemala);Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3242";Avensa;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3243";Austrian Air Service;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3245";Easy Jet — EASYJET;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3246";Ryan Air — RYANAIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3247";Gol Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3248";Tam Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3251";ALOHA AIRLINES;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3252";ALM — Antilean Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3253";America West;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3256";Alaska Airlines Inc.;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3259";AMERICAN TRANS AIR;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3260";Spirit Airlines — SPIRIT;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3261";Air China;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3262";RENO AIR, INC.;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3263";Aero Servicio Carabobo;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3266";Air Seychelles;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3267";Air Panama International;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3268";Air Pacific;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3273";Rica Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3274";Inter Nor Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3275";Air Nevada;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3276";Air Midwest;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3277";Air Madagascar;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3279";Air LA;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3280";Air Jamaica;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3281";Air Djibouti;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3282";Air Djibouti;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3284";AERO VIRGIN ISLANDS;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3285";Aero Peru;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3286";Aerolineas Nicaraguensis;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3287";Aero Coach Aviation;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3291";Ariana Afghan;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3292";Cyprus Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3293";Equatoriana;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3294";Ethiopian Airlines;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3295";Kenya Airways;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3296";Air Berlin — AIRBERLIN;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3297";Tarom Romanian Air Transport;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3298";Air Mauritius;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3299";Wideroe’s Flyveselskap;Airline/Railroad/Travel Agency/Transportation;Airlines, Air Carriers
+"3351";Affiliated Auto Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3352";American International;Automobile/Vehicle Rentals;Car Rental Agencies
+"3353";Brooks Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3354";Action Auto Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3355";SIXT Car Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3357";Hertz;Automobile/Vehicle Rentals;Car Rental Agencies
+"3359";Payless Car Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3360";Snappy Car Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3361";Airways Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3362";Altra Auto Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3364";Agency Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3366";Budget Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3368";Holiday R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3370";Rent-a-Wreck;Automobile/Vehicle Rentals;Car Rental Agencies
+"3374";Accent Rent-A-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3376";Ajax R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3380";Triangle Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3381";Europ Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3385";Tropical R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3386";Showcase Rental Cars;Automobile/Vehicle Rentals;Car Rental Agencies
+"3387";Alamo Rent a Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3388";Merchants Rent-A-Car, Inc;Automobile/Vehicle Rentals;Car Rental Agencies
+"3389";Avis R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3390";Dollar R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3391";Europe by Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3393";National Car Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3394";Kemwell Group R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3395";Thrify Car Rental;Automobile/Vehicle Rentals;Car Rental Agencies
+"3396";Tilden R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3398";Econo Car R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3400";Auto Host Car Rentals;Automobile/Vehicle Rentals;Car Rental Agencies
+"3405";Enterprise R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3409";General Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3412";A-1 R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3420";ANSA International;Automobile/Vehicle Rentals;Car Rental Agencies
+"3421";Allstate Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3423";Avcar Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3425";Automate Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3427";Avon Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3428";Carey Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3429";Insurance Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3430";Major Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3431";Replacement Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3432";Reserve Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3433";Ugly Duckling R-A-C;Automobile/Vehicle Rentals;Car Rental Agencies
+"3434";USA Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3435";Value Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3436";Autohansa Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3437";CITE RENT-A-CAR;Automobile/Vehicle Rentals;Car Rental Agencies
+"3438";Interenet Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3439";Millville Rent-a-Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3440";VIA ROUTE RENT-A-CAR;Automobile/Vehicle Rentals;Car Rental Agencies
+"3441";Advantage Rent A Car;Automobile/Vehicle Rentals;Car Rental Agencies
+"3501";Holiday Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3502";Best Western Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3503";Sheraton;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3504";Hilton;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3505";Forte Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3506";Golden Tulip Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3507";Friendship Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3508";Quality Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3509";Marriott;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3510";Days Inn Colonial Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3511";Arabella Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3512";Intercontinental Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3513";Westin;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3514";Amerisuites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3515";Rodeway Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3516";LaQuinta Motor Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3517";Americana Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3518";Sol Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3519";Pullman International Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3520";Meridien Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3521";Royal Lahaina Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3522";Tokyo Group;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3523";Peninsula Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3524";WelcomGroup Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3525";Dunfey Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3526";Prince Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3527";Downtowner Passport;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3528";Red Lion Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3529";CP (Canadian Pacific);Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3530";Renaissance Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3531";Kauai Coconut Beach Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3532";Royal Kona Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3533";Hotel Ibis;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3534";Southern Pacific;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3535";Hilton International;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3536";AMFAC Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3537";ANA Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3538";Concorde Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3539";Summerfield Suites Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3540";Iberotel Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3541";Hotel Okura;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3542";Royal Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3543";Four Seasons;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3544";Cigna Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3545";Shangri-La International;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3546";Hotel Sierra;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3547";Breakers Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3548";Hotels Melia;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3549";Auberge des Governeurs;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3550";Regal 8 Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3551";Mirage Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3552";Coast Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3553";Park Inns International;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3554";Pinehurst Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3555";Treasure Island Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3556";Barton Creek Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3557";Manhattan East Suite Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3558";Jolly Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3559";Candlewood Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3560";Aladdin Resort and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3561";Golden Nugget;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3562";Comfort Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3563";Journey’s End Motels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3564";Sam’s Town Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3565";Relax Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3566";Garden Place Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3567";Soho Grand Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3568";Ladbroke Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3569";Tribeca Grand Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3570";Forum Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3571";Grand Wailea Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3572";Miyako Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3573";Sandman Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3574";Venture Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3575";Vagabond Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3576";La Quinta Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3577";Mandarin Oriental Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3578";Frankenmuth Bavarian;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3579";Hotel Mercure;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3580";Hotel Del Coronado;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3581";Delta Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3582";California Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3583";SAS Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3584";Princess Hotels International;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3585";Hungar Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3586";Sokos Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3587";Doral Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3588";Helmsley Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3589";Doral Golf Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3590";Fairmont Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3591";Sonesta Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3592";Omni Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3593";Cunard Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3594";Arizona Biltmore;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3595";Hospitality Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3596";Wynn Las Vegas;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3597";Riverside Resort and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3598";Regent International Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3599";Pannonia Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3600";Saddlebrook Resort — Tampa;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3601";Trade Winds Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3602";Hudson Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3603";Noah’s Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3604";Hilton Garden Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3605";Jurys Doyle Hotel Group;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3606";Jefferson Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3607";Fountainebleau Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3608";Gaylord Opryland;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3609";Gaylord Palms;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3610";Gaylord Texan;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3611";C MON INN;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3612";Movenpick Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3613";Microtel Inns & Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3614";Americinn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3615";Travelodge Motels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3616";Hermitage Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3617";America’s Best Value Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3618";Great Wolf;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3619";Aloft;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3620";Binion’s Horseshoe Club;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3621";Extended Stay;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3622";Merlin Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3623";Dorint Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3624";Lady Luck Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3625";Hotel Universale;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3626";Studio Plus;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3627";Extended Stay America;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3628";Excalibur Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3629";Dan Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3630";Extended Stay Deluxe;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3631";Sleep Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3632";The Phoenician;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3633";Rank Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3634";Swissotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3635";Reso Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3636";Sarova Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3637";Ramada Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3638";Howard Johnson;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3639";Mount Charlotte Thistle;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3640";Hyatt Motels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3641";Sofitel Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3642";Novotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3643";Steigenberger Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3644";EconoLodges;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3645";Queens Moat Houses;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3646";Swallow Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3647";Husa Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3648";De Vere Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3649";Radisson Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3650";Red Roof Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3651";Imperial London Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3652";Embassy Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3653";Penta Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3654";Loews Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3655";Scandic Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3656";Sara Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3657";Oberoi Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3658";New Otani Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3659";Taj Hotels International;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3660";Knights Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3661";Metropole Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3662";Circus Circus Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3663";Hoteles El Presidente;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3664";Flag Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3665";Hampton Inn Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3666";Stakis Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3667";Luxor Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3668";Maritim Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3669";Eldorado Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3670";Arcade Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3671";Arctia Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3672";Campanile Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3673";IBUSZ Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3674";Rantasipi Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3675";Interhotel CEDOK;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3676";Monte Carlo Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3677";Climat de France Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3678";Cumulus Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3679";Silver Legacy Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3680";Hoteis Othan;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3681";Adams Mark Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3682";Sahara Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3683";Bradbury Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3684";Budget Hosts Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3685";Budgetel Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3686";Suisse Chalet;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3687";Clarion Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3688";Compri Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3689";Consort Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3690";Courtyard Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3691";Dillon Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3692";Doubletree;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3693";Drury Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3694";Economy Inns of America;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3695";Embassy Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3696";Excel Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3697";Fairfield Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3698";Harley Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3699";Midway Motor Lodge;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3700";Motel 6;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3701";La Mansion Del Rio;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3702";The Registry Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3703";Residence Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3704";Royce Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3705";Sandman Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3706";Shilo Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3707";Shoney’s Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3708";Virgin River Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3709";Super 8 Motels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3710";The Ritz Carlton Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3711";Flag Inns (Australia);Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3712";Buffalo Bill’s Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3713";Quality Pacific Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3714";Four Seasons Hotels — Austr;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3715";Fairfield Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3716";Carlton Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3717";City Lodge Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3718";Karos Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3719";Protea Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3720";Southern Sun Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3721";Hilton Conrad Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3722";Wyndham Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3723";Rica Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3724";Inter Nor Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3725";SeaPines Plantation;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3726";Rio Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3727";Broadmoor Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3728";Bally’s Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3729";John Ascuaga’s Nugget;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3730";MGM Grand Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3731";Harrah’s Hotels and Casinos;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3732";Opryland Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3734";Harvey/Bristol Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3735";Master Economy Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3736";Colorado Belle/Edgewater Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3737";Riviera Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3738";Tropicana Resort & Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3739";Woodside Hotels & Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3740";Towneplace Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3741";Millennium Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3742";CLUB MED;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3743";BILTMORE HOTEL AND SUITES;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3744";Carefree Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3745";St. Regis Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3746";The Eliot Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3747";ClubCorp/ClubResorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3748";Wellesley Inns;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3749";The Beverly Hills Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3750";Crown Plaza Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3751";Homewood Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3752";Peabody Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3753";Greenbriar Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3754";Amelia Island Plantation;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3755";The Homestead;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3756";SOUTH SEAS RESORTS;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3757";Canyon Ranch;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3758";Kahala Mandarion Oriental Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3759";The Orchid at Mauna Lani;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3760";Halekulani Hotel/Waikiki Parc;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3761";Primadonna Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3762";Whisky Pete’s Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3763";Chateau Elan Winery and Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3764";Beau Rivage Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3765";Bellagio;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3766";Fremont Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3767";Main Street Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3768";Silver Star Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3769";Stratosphere Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3770";SpringHill Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3771";Caesar’s Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3772";Nemacolin Woodlands;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3773";The Venetian Resort Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3774";New York — New York Hotel and Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3775";Sands Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3776";Nevele Grande Resort and Country Club;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3777";Mandalay Bay Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3778";Four Points Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3779";W Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3780";Disney Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3781";Patricia Grand Resort Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3782";Rosen Hotels & Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3783";Town and Country Resort and Convention Center;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3784";First Hospitality Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3785";Outrigger Hotels and Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3786";Ohana Hotel of Hawaii;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3787";Caribe Royale Resort Suites & Villas;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3788";Ala Moana Hotel / Ala Moana Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3789";Smugglers’ Notch Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3790";Raffles Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3791";Staybridge Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3792";Claridge Casino Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3793";The Flamingo Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3794";Grand Casino Hotels;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3795";Paris Las Vegas Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3796";Peppermill Hotel Casino;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3797";Atlantic City Hilton;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3798";Embassy Vacation Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3799";Hale Koa Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3800";Homestead;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3801";Wilderness Hotel and Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3802";The Palace Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3803";The Wigwam Golf Resort and Spa;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3804";The Diplomat Country Club and Spa;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3805";The Atlantic;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3806";Princeville Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3807";Element;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3808";LXR;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3809";Settle Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3810";La Costa Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3811";Premier Travel Inn;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3812";Hyatt Place;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3813";Hotel Indigo;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3814";The Roosevelt Hotel NY;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3815";Holiday Inn Nickelodeon;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3816";Home2Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3817";Affinia;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3818";Mainstay Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3819";Oxford Suites;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3820";Jumeirah Essex House;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3821";Caribe Royale;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3822";Crossland;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3823";Grand Sierra Resort;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3824";Aria;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3825";Vdara;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3826";Autograph;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3827";Galt House;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3828";Cosmopolitan of Las Vegas;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3829";Country Inn By Carlson;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3830";Park Plaza Hotel;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"3831";Waldorf;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"4011";Railroads;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4111";Local and Suburban Commuter Passenger Transportation, including Ferries;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4112";Passenger Rail (train);Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4119";Ambulance Services;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4121";Taxicabs and Limousines;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4131";Bus Lines, includes Charters/Tour Buses;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4214";Motor Freight Carriers and Trucking — Local and Long Distance, Moving & Storage Companies, and Local Delivery;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4215";Courier Services — Air and Ground, and Freight Forwarders;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4225";Public Warehousing — Farm products, Refrigerated Goods, Household Goods, and Storage;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4411";Steamship and Cruise Lines;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4457";Boat Rentals and Leasing;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4468";Marinas, Marine Service, and Supplies;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4511";Airlines and Air Carriers;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4582";Airports, Flying Fields, and Airport Terminals;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4722";Travel Agencies;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4723";Package Tour Operators (For use in Germany only);Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4761";Telemarketing of Travel Related Services and Vitamins;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4784";Bridge and Road Fees, Tolls;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"4789";Transportation Services — not elsewhere classified;Airline/Railroad/Travel Agency/Transportation;Travel/Transportation/Gas and Fuel Services
+"4812";Telecommunication Equipment and Telephone Sales;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4813";Special Telecom Merchant;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4814";Telecommunication Services, Including Local and Long Distance Calls, Credit Card Calls, Call Through Use of Magnetic-Strip-Reading Telephones, and Fax Services;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4815";Visa Phone;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4816";Computer Network/Information Services and other Online Services such as electronic bulletin board, e-mail, web site hosting services, or Internet access;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4821";Telegraph Services;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4829";Quasi Cash — Wire Transfer Money Order;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4899";Cable, Satellite, and Other Pay Television and Radio Services;All Other Merchants/Post Exchange;Electronic and Technical Services
+"4900";Utilities — Electric, Gas, Water, and Sanitary;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5013";Motor Vehicle Supplies and New Parts (Business to Business MCC);Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5021";Office Furniture (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5039";Construction Materials Not Elsewhere Classified (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5044";Photographic, Photocopy, Microfilm Equipment and Supplies (Business to Business MCC);All Other Merchants/Post Exchange;Electronic and Technical Services
+"5045";Computers, Computer Peripheral Equipment, and Software;All Other Merchants/Post Exchange;Electronic and Technical Services
+"5046";Commercial Equipment Not Elsewhere Classified (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5047";Dental/Laboratory/Medical/Ophthalmic Hospital Equipment and Supplies;College/School Expense/Hospital;Healthcare/Child Services
+"5051";Metal Service Centers and Offices (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5065";Electrical Parts and Equipment (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5072";Hardware, Plumbing, Heat Equipment and Supplies (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5074";Plumbing and Heating Equipment and Supplies (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5085";Industrial Supplies Not Elsewhere Classified (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5094";Precious Stones, Metals, Watches and Jewelry (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5099";Durable Goods Not Elsewhere Classified (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5111";Stationery, Office Supplies, and Printing and Writing Paper;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5122";Drugs, Drug Proprietary’s, and Druggists’ Sundries;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5131";Piece Goods, Notions and Other Dry Goods (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5137";Men’s, Women’s and Children’s Uniforms (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5139";Commercial Footwear (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5169";Chemicals and Allied Products Not Elsewhere Classified (Business to Business MCC);Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5172";Petroleum and Products (Business to Business MCC);Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5192";Books, Periodicals and Newspapers (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5193";Florist Suppliers, Nursery Stock & Flowers (Business to Business MCC);All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5198";Paints, Varnishes and Supplies (Business to Business MCC);All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5199";Non-durable Goods Not Elsewhere Classified (Business to Business MCC);All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5200";Home Supply Warehouse;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5211";Lumber & Building Materials Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5231";Glass, Paint, and Wallpaper Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5251";Hardware Stores, Equipment Utilities Regulated;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5261";Nurseries and Lawn and Garden Supply Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5271";Mobile Home Dealer;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5299";Warehouse Club Gas;All Other Merchants/Post Exchange;Travel/Transportation/Gas and Fuel Services
+"5300";Wholesale Club with or without membership fee;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5309";Duty Free Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5310";Discount Store;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5311";Department Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5331";Variety Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5399";Miscellaneous General Merchandise;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5411";Grocery Stores and Supermarkets;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5422";Freezer & Locker Meat Provisions;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5441";Candy, Nut, and Confectionary Stores;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5451";Dairy Product Stores;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5462";Bakeries;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5499";Miscellaneous Food Stores — Convenience Stores and Specialty Markets;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5511";Car and Truck Dealers (New and Used) — Sales, Service, Repairs, Parts, and Leasing;All Other Merchants/Post Exchange;Associations/Organizations
+"5521";Car and Truck Dealers (Used) — Sales, Service, Repairs, Parts, and Leasing;All Other Merchants/Post Exchange;Associations/Organizations
+"5531";Auto and Home Supply Stores;All Other Merchants/Post Exchange;Associations/Organizations
+"5532";Automotive Tire Stores;All Other Merchants/Post Exchange;Associations/Organizations
+"5533";Automotive Parts and Accessories Stores;All Other Merchants/Post Exchange;Associations/Organizations
+"5541";Service Stations (with or without Ancillary Services);Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5542";Automated Fuel Dispensers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5551";Boat Dealers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5561";Camper, Recreational and Utility Trailer Dealers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5571";Motorcycle Dealers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5592";Motor Home Dealers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5598";Snowmobile Dealers;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5599";Miscellaneous Automotive, Aircraft, and Farm Equipment Dealers — Not Elsewhere Classified;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5611";Men’s & Boys’ Clothing and Accessory Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5621";Women’s Ready-to-Wear Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5631";Women’s Accessory and Specialty Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5641";Children’s and Infants’ Wear Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5651";Family Clothing Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5655";Sports and Riding Apparel Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5661";Shoe Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5681";Furriers & Fur Shops;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5691";Men’s and Women’s Clothing Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5697";Tailors, Seamstresses, Mending, Alterations;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5698";Wig & Toupee Shops;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5699";Miscellaneous Apparel and Accessory Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5712";Furniture, Home Furnishings, and Equipment Stores, except Appliances;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5713";Floor Coverings, Rugs;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5714";Drapery, Window Covering, and Upholstery Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5718";Fireplaces, Fireplace Screens and Accessories Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5719";Miscellaneous Home Furnishing Specialty Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5722";Household Appliance Stores;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"5732";Electronics Stores;All Other Merchants/Post Exchange;Electronic and Technical Services
+"5733";Music Stores — Musical Instruments, Pianos, and Sheet Music;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5734";Computer Software Stores;All Other Merchants/Post Exchange;Electronic and Technical Services
+"5735";Record Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5811";Caterers — Prepare & Delivery;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5812";Eating Places and Restaurants;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5813";Drinking Places (Alcoholic Beverages) — Bars, Taverns, Nightclubs, Cocktail Lounges, and Discotheques;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5814";Quick Payment Service — Fast Food Restaurants;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5815";Digital Goods: Books, Movies, Music;All Other Merchants/Post Exchange;Other
+"5816";Digital Goods: Game;All Other Merchants/Post Exchange;Other
+"5817";Digital Goods: Applications (Excludes Games);All Other Merchants/Post Exchange;Other
+"5818";Digital Goods: Large Digital Goods Merchant (V);All Other Merchants/Post Exchange;Other
+"5912";Drug Stores and Pharmacies;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5921";Package Stores — Beer, Wine, and Liquor;Restaurant;Grocery Stores/Pharmacies/Food Services/Restaurants
+"5931";Used Merchandise and Secondhand Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5932";Antique Shop;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5933";Pawn Shop;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5935";Wrecking and Salvage Yards;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5937";Antique Reproduction Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5940";Bicycle Shop — Sales and Services;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5941";Sporting Goods Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5942";Book Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5943";Stationery, Office and School Supply Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5944";Jewelry, Watch, Clock, and Silverware Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5945";Hobby, Toy and Game Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5946";Camera and Photographic Supply Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5947";Gift, Card, Novelty, and Souvenir Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5948";Luggage and Leather Goods Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5949";Sewing, Needlework, Fabric, and Piece Good Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5950";Glassware and Crystal Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5960";Direct Marketing Insurance Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5961";Mail Order;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5962";Direct Marketing — Travel Related Arrangement Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5963";Direct Selling Establishments/Door to Door Sales;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5964";Catalog Merchant;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5965";Combined Catalog and Retail Merchant;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5966";Outbound Telemarketing Merchant;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5967";Direct Marketing — Inbound Telemarketing Merchants;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5968";Continuity/Subscription Merchants;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5969";Direct Marketing/Direct Marketers — Not Elsewhere Classified;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5970";Artist Supply and Craft Stores;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5971";Art Dealers and Galleries;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5972";Stamp and Coin Stores;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5973";Religious Goods Stores;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"5975";Hearing Aids — Sales, Service, and Supplies;College/School Expense/Hospital;Healthcare/Child Services
+"5976";Orthopedic Goods and Prosthetic Devices;College/School Expense/Hospital;Healthcare/Child Services
+"5977";Cosmetic Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5978";Typewriter Stores — Sales, Service, and Rentals;All Other Merchants/Post Exchange;Electronic and Technical Services
+"5983";Fuel Dealers — Fuel Oil, Wood, Coal, and Liquefied Petroleum;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"5992";Florists;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5993";Cigar Stores & Stands;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5994";News Dealers & Newsstands;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5995";Pet Shops, Pet Food, and Supplies;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5996";Swimming Pools — Sales, Supplies, and Services;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5997";Electric Razor Stores Sales & Services;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5998";Tent and Awning Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"5999";Miscellaneous & Specialty Retail Stores;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"6010";Financial Institutions — Manual Cash Disbursements;Payment Service Provider;Financial Services
+"6011";Financial Institutions — Automated Cash Disbursements;Payment Service Provider;Financial Services
+"6012";Quasi Cash — Financial Institution — Merchandise and Services;Payment Service Provider;Financial Services
+"6050";Quasi Cash — Member Financial Institution;Payment Service Provider;Financial Services
+"6051";"MasterCard — Quasi Cash-Merchant; Visa — None Financial Institutions — foreign currency, money orders (not wire transer), & Travelers Cheques";Payment Service Provider;Financial Services
+"6211";Securities — Brokers and Dealers;Payment Service Provider;Financial Services
+"6300";Insurance Sales and Underwriting;Payment Service Provider;Financial Services
+"6381";Insurance Premiums, (no longer valid for first presentment work);Payment Service Provider;Financial Services
+"6399";Insurance, Not Elsewhere Classified ( no longer valid for first presentment work);Payment Service Provider;Financial Services
+"6513";"Real Estate Agents and Managers — Rentals; Property Management";Payment Service Provider;Financial Services
+"6529";Quasi Cash — Remote Stored Value Load — Financial Institute;Payment Service Provider;Financial Services
+"6530";Quasi Cash — Remote Stored Value Load — Merchant;Payment Service Provider;Financial Services
+"6531";Payment Service Provider;Payment Service Provider;Financial Services
+"6532";Payment Transaction — Member;Payment Service Provider;Financial Services
+"6533";Payment Transaction — Merchant;Payment Service Provider;Financial Services
+"6534";Quasi Cash — Money Transfer — Member Financial Institution;Payment Service Provider;Financial Services
+"6535";Value Purchase — Member Financial Institution;Payment Service Provider;Financial Services
+"6536";MoneySend Intracountry;Payment Service Provider;Financial Services
+"6537";MoneySend Intercountry;Payment Service Provider;Financial Services
+"6538";MoneySend Funding;Payment Service Provider;Financial Services
+"6540";POI (Point of Interaction) Funding Transactions (Excluding MoneySend);Payment Service Provider;Financial Services
+"6611";Overpayments;Payment Service Provider;Financial Services
+"6760";Savings Bonds;Payment Service Provider;Financial Services
+"7011";Lodging — Hotels, Motels, and Resorts;Hotel/Motel;Lodging — Hotels, Motels, Resorts
+"7012";Timeshares;All Other Merchants/Post Exchange;Associations/Organizations
+"7032";Sporting and Recreational Camps;All Other Merchants/Post Exchange;Associations/Organizations
+"7033";Trailer Parks and Campgrounds;All Other Merchants/Post Exchange;Associations/Organizations
+"7210";Laundry, Cleaning, and Garment Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7211";Laundry Services — Family and Commercial;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7216";Dry Cleaners;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7217";Carpet and Upholstery Cleaning;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7221";Photographic Studios;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7230";Beauty and Barber Shops;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7251";Shoe Repair Shops, Shoe Shine Parlors, and Hat Cleaning Shops;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7261";Funeral Services and Crematories;All Other Merchants/Post Exchange;Personal Services
+"7273";Dating and Escort Services;All Other Merchants/Post Exchange;Personal Services
+"7276";Tax Preparation Services;All Other Merchants/Post Exchange;Personal Services
+"7277";Counseling Services — Debt, Marriage, and Personal;All Other Merchants/Post Exchange;Personal Services
+"7278";Buying and Shopping Services and Clubs;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"7280";Hospital Patient-Personal Funds Withdrawal;All Other Merchants/Post Exchange;Personal Services
+"7295";Babysitting Services;All Other Merchants/Post Exchange;Personal Services
+"7296";Clothing Rental — Costumes, Uniforms and Formal Wear;All Other Merchants/Post Exchange;Clothing/Shoes/Accessories/Uniforms/Retail Stores/Buying and Selling Services
+"7297";Massage Parlors;All Other Merchants/Post Exchange;Personal Services
+"7298";Health and Beauty Spas;All Other Merchants/Post Exchange;Personal Services
+"7299";Miscellaneous Personal Services — Not Elsewhere Classified;All Other Merchants/Post Exchange;Personal Services
+"7311";Advertising Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7321";Consumer Credit Reporting Agencies;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7332";Blueprinting and Photocopying Services;All Other Merchants/Post Exchange;Electronic and Technical Services
+"7333";Commercial Photography, Art, and Graphics;All Other Merchants/Post Exchange;Electronic and Technical Services
+"7338";Quick Copy, Reproduction Service;All Other Merchants/Post Exchange;Electronic and Technical Services
+"7339";Stenographic Service;All Other Merchants/Post Exchange;Electronic and Technical Services
+"7341";Disinfecting Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7342";Exterminating and Disinfecting Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7349";Cleaning, Maintenance & Janitorial Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7361";Employment Agencies and Temporary Help Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7372";Computer Programming, Data Processing, and Integrated Systems Design Services;All Other Merchants/Post Exchange;Electronic and Technical Services
+"7375";Information Retrieval Services (Business to Business MCC);All Other Merchants/Post Exchange;Electronic and Technical Services
+"7379";Computer Maintenance, Repair and Services (Business to Business MCC);All Other Merchants/Post Exchange;Electronic and Technical Services
+"7392";Management, Consulting, and Public Relations Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7393";Detective Agencies, Protective Agencies, and Security Services, including Armored Cars and Guard Dogs;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7394";Equipment, Tool, Furniture, and Appliance Rental and Leasing;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7395";Photofinishing Laboratories and Photo Developing;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7399";Business Services;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"7511";Quasi Cash — Truck Stop Transactions;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7512";Automobile Rental Agency;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7513";Truck and Utility Trailer Rentals;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7519";Motor Home and Recreational Vehicle Rentals;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7523";Parking Lots and Garages;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7524";Express Payment Service Mechants — Parking Lots and Garages;Unique Transaction Quasi-Cash Disbursement/Terminal;Travel/Transportation/Gas and Fuel Services
+"7531";Automotive Top & Body Shops;All Other Merchants/Post Exchange;Associations/Organizations
+"7534";Tire Retreading & Repair;All Other Merchants/Post Exchange;Associations/Organizations
+"7535";Automotive Paint Shops;All Other Merchants/Post Exchange;Associations/Organizations
+"7538";Automotive Service Shops (Non-Dealer);All Other Merchants/Post Exchange;Associations/Organizations
+"7542";Car Washes;All Other Merchants/Post Exchange;Associations/Organizations
+"7549";Towing Services;All Other Merchants/Post Exchange;Associations/Organizations
+"7622";Electronic Repair Shops;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7623";Air Conditioning and Refrigeration Repair Shops;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7629";Electrical and Small Appliance Repair Shops;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7631";Watch, Clock, and Jewelry Repair Shops;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7641";Furniture — Reupholster, Repair, and Refinishing;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7692";Welding Services;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7699";Miscellaneous Repair Shops and Related Services;All Other Merchants/Post Exchange;Furnishings/Appliances/Maintenance/Home
+"7778";Citishare Cash Advance;Payment Service Provider;Financial Services
+"7829";Motion Picture & Video Tape Production and Distribution (Business to Business MCC);All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7832";Motion Picture Theater;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7833";Express Payment Service — Motion Picture Theater;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7841";DVD/Video Tape Rental Stores;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7911";Dance Halls, Studios & Schools;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7922";Theatrical Producers (except Motion Pictures) and Ticket Agencies;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7929";Bands, Orchestras & Misc Entertainment;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7932";Billiards & Pool Establishments;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7933";Bowling Alleys;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7941";Commercial Sports, Professional Sports Clubs, Athletic Fields, and Sports Promoters;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7991";Tourist Attractions and Exhibits;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7992";Public Golf Courses;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7993";Video Amusement Game Supply;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7994";Video Game Arcades and Establishments;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7995";Betting, including Lottery Tickets, Casino Gaming Chips, Off-Track Betting, and Wagers at Race Track;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7996";Amusement Parks, Circuses, Carnivals, and Fortune Tellers;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7997";Membership Clubs (Sports, Recreation, Athletic), Country Clubs, and Private Golf Courses;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7998";Aquarium, Seaquarium, Dolphinariums;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"7999";Recreation Services — Not Elsewhere Classified;All Other Merchants/Post Exchange;Entertainment/Theater/Dance Studios
+"8011";Doctors and Physicians — Not Elsewhere Classified;College/School Expense/Hospital;Healthcare/Child Services
+"8021";Dentists and Orthodontists;College/School Expense/Hospital;Healthcare/Child Services
+"8031";Osteopathic Physicians;College/School Expense/Hospital;Healthcare/Child Services
+"8041";Chiropractors;College/School Expense/Hospital;Healthcare/Child Services
+"8042";Optometrists and Ophthalmologists;College/School Expense/Hospital;Healthcare/Child Services
+"8043";Opticians, Optical Goods and Eyeglasses;College/School Expense/Hospital;Healthcare/Child Services
+"8044";Opticians, Optical Goods, and Eyeglasses (no longer valid for first presentments);College/School Expense/Hospital;Healthcare/Child Services
+"8049";Podiatrists and Chiropodists;College/School Expense/Hospital;Healthcare/Child Services
+"8050";Nursing and Personal Care Facilities;College/School Expense/Hospital;Healthcare/Child Services
+"8062";Hospitals;College/School Expense/Hospital;Healthcare/Child Services
+"8071";Medical and Dental Laboratories;College/School Expense/Hospital;Healthcare/Child Services
+"8099";Medical Services Health Practitioners — No Elsewhere Classified;College/School Expense/Hospital;Healthcare/Child Services
+"8111";Legal Services and Attorneys;All Other Merchants/Post Exchange;Business/Professional/Miscellaneous Services
+"8211";Elementary and Secondary Schools;College/School Expense/Hospital;Educational Services
+"8220";Colleges, Universities, Professional Schools, and Junior Colleges;College/School Expense/Hospital;Educational Services
+"8241";Correspondence Schools;College/School Expense/Hospital;Educational Services
+"8244";Business and Secretarial Schools;College/School Expense/Hospital;Educational Services
+"8249";Trade and Vocational Schools;College/School Expense/Hospital;Educational Services
+"8299";Schools and Educational Services — Not Elsewhere Classified;College/School Expense/Hospital;Educational Services
+"8351";Child Care Services;College/School Expense/Hospital;Healthcare/Child Services
+"8398";Charitable and Social Service Organizations;All Other Merchants/Post Exchange;Associations/Organizations
+"8641";Civic, Social, and Fraternal Associations;All Other Merchants/Post Exchange;Associations/Organizations
+"8651";Political Organizations;All Other Merchants/Post Exchange;Associations/Organizations
+"8661";Religious Organizations;All Other Merchants/Post Exchange;Associations/Organizations
+"8675";Automobile Associations;All Other Merchants/Post Exchange;Associations/Organizations
+"8699";Membership Organizations — Not Elsewhere Classified;All Other Merchants/Post Exchange;Associations/Organizations
+"8734";Testing Laboratories (Not Medical) — (Business to Business MCC);All Other Merchants/Post Exchange;Associations/Organizations
+"8911";Architectural, Engineering, and Surveying Services;All Other Merchants/Post Exchange;Associations/Organizations
+"8931";Accounting, Auditing, and Bookkeeping Services;All Other Merchants/Post Exchange;Associations/Organizations
+"8999";Professional Services — Not Elsewhere Classified;All Other Merchants/Post Exchange;Associations/Organizations
+"9211";Court Costs, including Alimony and Child Support;All Other Merchants/Post Exchange;Associations/Organizations
+"9222";Fines;All Other Merchants/Post Exchange;Associations/Organizations
+"9223";Bail & Bond Payments;All Other Merchants/Post Exchange;Associations/Organizations
+"9311";Tax Payments;All Other Merchants/Post Exchange;Associations/Organizations
+"9399";Government Services — Not Elsewhere Classified;All Other Merchants/Post Exchange;Associations/Organizations
+"9401";i-Purchasing;All Other Merchants/Post Exchange;Associations/Organizations
+"9402";Postal Services;All Other Merchants/Post Exchange;Associations/Organizations
+"9405";U.S. Fed Government Agencies;All Other Merchants/Post Exchange;Associations/Organizations
+"9700";Automated Referral Service ( For Visa Only);All Other Merchants/Post Exchange;Associations/Organizations
+"9701";Visa Credential Service ( For Visa Only);All Other Merchants/Post Exchange;Associations/Organizations
+"9702";GCAS Emergency Services ( For Visa Only);All Other Merchants/Post Exchange;Associations/Organizations
+"9751";U.K. Supermarkets Electronic Hot File;All Other Merchants/Post Exchange;Associations/Organizations
+"9752";U.K. Petrol Stations, Electronic Hot File;All Other Merchants/Post Exchange;Associations/Organizations
+"9753";Intra-Company Purchases;All Other Merchants/Post Exchange;Associations/Organizations
+"9754";Quasi Cash — Gambling — Horse Racing, Dog Racing, State Lotteries;All Other Merchants/Post Exchange;Associations/Organizations
+"9950";Intra-Company Purchases;All Other Merchants/Post Exchange;Associations/Organizations

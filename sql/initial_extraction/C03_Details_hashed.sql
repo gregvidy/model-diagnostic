@@ -1,0 +1,60 @@
+/*
+	2025-03-05 v0.1 Irfan
+*/
+
+DECLARE @ExtractDate DATETIME
+SET @ExtractDate = GETDATE();
+
+SELECT
+	Transaction_Serial_No AS 'Transaction Serial No',
+	ProductIndicator AS 'Product Indicator',
+	ReleaseNumber AS 'Release Number',
+	Status AS 'Status',
+	OrigCode AS 'Originator Code',
+	RespCode AS 'Responder Code',
+	MTI AS 'MTI',
+	PrimaryBitMap AS 'Primary Bit Map',
+	SecondaryBitMap AS 'Secondary Bit Map',
+	HashBytes('SHA2_256', CardNo) AS 'PANNumber',
+	ProcessingCode AS 'Processing Code',
+	Transaction_Amount AS 'Transaction Amount',
+	CardBillingAmount AS 'Card Billing Amount',
+	TransmissionDate AS 'Transmission Date',
+	STAN AS 'STAN',
+	Transaction_Datetime AS 'Transaction Datetime',
+	Expiry_Date AS 'Expiration Date',
+	SettlementDate AS 'Settlement Date',
+	CaptureDate AS 'Capture Date',
+	MCC AS 'MCC',
+	CountryCode AS 'Country Code',
+	POSEntryMode AS 'POS Entry Mode',
+	POSCondCode AS 'POS Condition Code',
+	AuthIDRespLength AS 'Auth ID Response Length',
+	Merchant_Id AS 'Merchant Id',
+	Track2 AS 'Track2',
+	RRN AS 'Retrival Reference Number',
+	AuthIDResp AS 'Auth ID Response',
+	ResponseCode AS 'Response Code',
+	CardAcceptorTerminalID AS 'Card Acceptor TerminalID',
+	CardAcceptorID AS 'Card Acceptor ID',
+	TerminalOwner AS 'Terminal Owner',
+	TerminalCIty AS 'Terminal CIty',
+	TerminalState AS 'Terminal State',
+	TerminalCountry AS 'Terminal Country',
+	AdditionalData AS 'Additional Data',
+	CurrencyCode AS 'Currency Code',
+	TerminalData AS 'Terminal Data',
+	POSData AS 'POS Data',
+	BanknetData AS 'Banknet Data',
+	HashBytes('SHA2_256', RcvInstID) AS 'Recv Institution ID',
+	HashBytes('SHA2_256', AccountIdentification1) AS 'Account Identification1',
+	HashBytes('SHA2_256', AccountIdentification2) AS 'Account Identification2',
+	AuthAgentID AS 'Auth AgentID',
+	SettlementRecord AS 'Settlement Record',
+	BatchData AS 'Batch and Shift Data',
+	SettlementData AS 'Settlement Data',
+	AccountIndicator AS 'Account Indicator',
+	Preauthorization AS 'Pre authorization',
+	ATMAdditionalData AS 'ATM Additional Data'
+INTO [DataExtractionDB].[dbo].[C03_Details_Hashed]
+FROM [BDI-PRD-PDTORDB].[Predator].[dbo].[C03_Details] WITH (NOLOCK) WHERE Transaction_Datetime <= @ExtractDate

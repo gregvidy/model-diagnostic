@@ -76,9 +76,10 @@ def calculate_monetary(
     window: str = "30D",
     na_value: Optional[float] = None,
     out_col: str = "monetary",
+    agg_func: str = "mean",  # parameter: 'mean', 'max', or 'sum'
 ) -> pd.DataFrame:
     """
-    Calculate the monetary value of transactions.
+    Calculate the monetary value of transactions using a rolling window.
 
     Parameters:
     - dataset: pd.DataFrame
@@ -91,18 +92,24 @@ def calculate_monetary(
     - window: str (rolling window size)
     - na_value: Optional[float] (value to fill NA)
     - out_col: str (output column name)
+    - agg_func: str ('mean', 'max', or 'sum')
 
     Returns:
     - pd.DataFrame with monetary value of transactions
     """
     dataset = dataset.sort_values(by=datetime_col, ascending=True)
+
+    # Validate aggregation function
+    if agg_func not in ["mean", "max", "sum"]:
+        raise ValueError("agg_func must be one of: 'mean', 'max', 'sum'")
+
     if groupby_type == "No":
         df_amt_trnx = (
             dataset.set_index(datetime_col)
             .sort_index()
             .groupby(groupby)[amount_col]
             .rolling(window, closed="left")
-            .mean()
+            .agg(agg_func)
             .fillna(na_value)
             .reset_index()
         )
@@ -112,7 +119,7 @@ def calculate_monetary(
             .sort_index()
             .groupby([groupby, groupby_col])[amount_col]
             .rolling(window, closed="left")
-            .mean()
+            .agg(agg_func)
             .fillna(na_value)
             .reset_index()
         )
@@ -177,8 +184,9 @@ def calculate_unique_count(
 def calculate_time_differences(
     df: pd.DataFrame,
     datetime_col: str,
-    shift_columns: Dict[str, List[str]],
-    time_diff_columns: Dict[str, str],
+    groupby_col: str,
+    time_window: List[str],
+    config: Dict[str, List[str]]
 ) -> pd.DataFrame:
     """
     Calculate time differences between transactions.
@@ -186,86 +194,56 @@ def calculate_time_differences(
     Parameters:
     - df: pd.DataFrame
     - datetime_col: str
-    - shift_columns: Dict[str, List[str]] (columns to shift and their groupby columns)
-    - time_diff_columns: Dict[str, str] (time difference columns and their corresponding shift columns)
+    - groupby_col: str
+    - time_window: List[str]
+    - config: Dict[str, List[str]]
 
     Returns:
-    - pd.DataFrame with time differences
+    - pd.DataFrame with time differences and rolling averages
     """
-    df = df.sort_values(by=[datetime_col], ascending=True)
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+    df = df.sort_values(by=[groupby_col, datetime_col])
 
-    for col, groupby_cols in shift_columns.items():
-        df[col] = df.groupby(by=groupby_cols)[datetime_col].shift(1)
+    for new_col, groupby_cols in config.items():
+        df = df.sort_values(by=groupby_cols + [datetime_col])
 
-    for col, shift_col in time_diff_columns.items():
-        df[col] = np.where(
-            df[shift_col].isnull(),
-            -1,
-            (df[datetime_col] - df[shift_col]).dt.total_seconds() / 60,
-        )
+        if len(groupby_cols) == 1:
+            # Simple time difference
+            df[new_col] = df.groupby(groupby_cols)[datetime_col].diff().dt.total_seconds()/60
+        else:
+            # Conditional time difference: only when the last column changes
+            primary_group = groupby_cols[0]
+            change_col = groupby_cols[-1]
+
+            def compute_conditional_diff(group):
+                group = group.sort_values(by=datetime_col)
+                prev_time = group[datetime_col].shift()
+                prev_val = group[change_col].shift()
+                changed = group[change_col] != prev_val
+                time_diff = (group[datetime_col] - prev_time).dt.total_seconds()/60
+                return time_diff.where(changed)
+
+            df[new_col] = (
+                df.groupby(primary_group, group_keys=False)
+                .apply(compute_conditional_diff)
+            )
+
+        # Rolling averages
+        for window in time_window:
+            temp_df = df[[datetime_col, groupby_col, new_col]].copy()
+            temp_df = temp_df.sort_values(by=[groupby_col, datetime_col])
+            temp_df.set_index(datetime_col, inplace=True)
+
+            rolled = (
+                temp_df.groupby(groupby_col)[new_col]
+                .rolling(window=window)
+                .mean()
+                .reset_index(level=0, drop=True)
+            )
+
+            df[f'avg_{new_col}_L{window}'] = rolled.values
 
     return df
-
-
-def calculate_monetary_max(
-    dataset: pd.DataFrame,
-    datetime_col: str,
-    key: str,
-    groupby: str,
-    amount_col: str,
-    groupby_type: str = "No",
-    groupby_col: Optional[str] = None,
-    window: str = "30D",
-    na_value: Optional[float] = None,
-    out_col: str = "monetary_max",
-) -> pd.DataFrame:
-    """
-    Calculate the maximum monetary value of transactions.
-
-    Parameters:
-    - dataset: pd.DataFrame
-    - datetime_col: str
-    - key: str
-    - groupby: str
-    - amount_col: str
-    - groupby_type: str ('No' or 'Yes')
-    - groupby_col: Optional[str] (optional)
-    - window: str (rolling window size)
-    - na_value: Optional[float] (value to fill NA)
-    - out_col: str (output column name)
-
-    Returns:
-    - pd.DataFrame with maximum monetary value of transactions
-    """
-    dataset = dataset.sort_values(by=datetime_col, ascending=True)
-    if groupby_type == "No":
-        df_amt_trnx = (
-            dataset.set_index(datetime_col)
-            .sort_index()
-            .groupby(groupby)[amount_col]
-            .rolling(window, closed="left")
-            .max()
-            .fillna(na_value)
-            .reset_index()
-        )
-    else:
-        df_amt_trnx = (
-            dataset.set_index(datetime_col)
-            .sort_index()
-            .groupby([groupby, groupby_col])[amount_col]
-            .rolling(window, closed="left")
-            .max()
-            .fillna(na_value)
-            .reset_index()
-        )
-
-    df_amt_trnx.rename(columns={amount_col: out_col}, inplace=True)
-    df_amt_trnx = df_amt_trnx.drop_duplicates(
-        subset=[groupby, datetime_col], keep="last"
-    )
-    dataset_TJ = dataset[[key, groupby, datetime_col]]
-    join_data = dataset_TJ.merge(df_amt_trnx, how="left", on=[groupby, datetime_col])
-    return join_data[[key, groupby, datetime_col, out_col]]
 
 
 # Generate rolling features:
@@ -273,7 +251,7 @@ def generate_rolling_features(
     df: pd.DataFrame, datetime_col: str, key_col: str, features_config: List[Dict]
 ) -> pd.DataFrame:
     """
-    Generate rolling window features (frequency, unique count, monetary, monetary_max) based on configuration.
+    Generate rolling window features (frequency, unique count, monetary) based on configuration.
 
     Parameters:
     - df: Input DataFrame
@@ -319,6 +297,7 @@ def generate_rolling_features(
                     out_col=out_col,
                 )
             elif feature_type == "monetary":
+                agg_func = config.get("agg_func", "mean")  # Default to mean
                 feature_df = calculate_monetary(
                     dataset=df,
                     datetime_col=datetime_col,
@@ -330,19 +309,7 @@ def generate_rolling_features(
                     window=window,
                     na_value=na_value,
                     out_col=out_col,
-                )
-            elif feature_type == "monetary_max":
-                feature_df = calculate_monetary_max(
-                    dataset=df,
-                    datetime_col=datetime_col,
-                    key=key_col,
-                    groupby=groupby,
-                    amount_col=config["amount_col"],
-                    groupby_type=groupby_type,
-                    groupby_col=groupby_col,
-                    window=window,
-                    na_value=na_value,
-                    out_col=out_col,
+                    agg_func=agg_func,
                 )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
@@ -360,6 +327,7 @@ def generate_rolling_features(
         )
 
     return df_merged
+
 
 
 # example usage
