@@ -186,7 +186,7 @@ def calculate_time_differences(
     datetime_col: str,
     groupby_col: str,
     time_window: List[str],
-    config: Dict[str, List[str]]
+    config: Dict[str, List[str]],
 ) -> pd.DataFrame:
     """
     Calculate time differences between transactions.
@@ -209,7 +209,9 @@ def calculate_time_differences(
 
         if len(groupby_cols) == 1:
             # Simple time difference
-            df[new_col] = df.groupby(groupby_cols)[datetime_col].diff().dt.total_seconds()/60
+            df[new_col] = (
+                df.groupby(groupby_cols)[datetime_col].diff().dt.total_seconds() / 60
+            )
         else:
             # Conditional time difference: only when the last column changes
             primary_group = groupby_cols[0]
@@ -220,12 +222,11 @@ def calculate_time_differences(
                 prev_time = group[datetime_col].shift()
                 prev_val = group[change_col].shift()
                 changed = group[change_col] != prev_val
-                time_diff = (group[datetime_col] - prev_time).dt.total_seconds()/60
+                time_diff = (group[datetime_col] - prev_time).dt.total_seconds() / 60
                 return time_diff.where(changed)
 
-            df[new_col] = (
-                df.groupby(primary_group, group_keys=False)
-                .apply(compute_conditional_diff)
+            df[new_col] = df.groupby(primary_group, group_keys=False).apply(
+                compute_conditional_diff
             )
 
         # Rolling averages
@@ -241,7 +242,7 @@ def calculate_time_differences(
                 .reset_index(level=0, drop=True)
             )
 
-            df[f'avg_{new_col}_L{window}'] = rolled.values
+            df[f"avg_{new_col}_L{window}"] = rolled.values
 
     return df
 
@@ -327,7 +328,6 @@ def generate_rolling_features(
         )
 
     return df_merged
-
 
 
 # example usage

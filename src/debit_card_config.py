@@ -2,21 +2,27 @@
 ### TIME DIFFERENCE ###
 #######################
 time_shift_config = {
-    'time_diff': ['PANNumber'],
-    'time_diff_before_mcc': ['PANNumber', 'MCC'],
-    'time_diff_before_mcc_cat': ['PANNumber', 'MCC Category'],
-    'time_diff_before_country_code': ['PANNumber', 'Country Code'],
-    'time_diff_before_currency_code': ['PANNumber', 'Currency Code'],
+    "time_diff": ["Card No"],
+    "time_diff_before_mcc": ["Card No", "MCC"],
+    "time_diff_before_mcc_cat": ["Card No", "MCC Category"],
+    "time_diff_before_country_code": ["Card No", "Country Code"],
+    "time_diff_before_currency_code": ["Card No", "Transaction Currency Code"],
+    "time_diff_before_card_acceptor_name_cat": ["Card No", "Cat Card Acceptor Name"],
+    "time_diff_before_card_acceptor_reg_code": ["Card No", "Card Acceptor Region Code"],
+    "time_diff_before_card_acceptor_country_code": [
+        "Card No",
+        "Card Acceptor Country Code",
+    ],
 }
 
 time_windows = [
-    '900S', # 15 mins
-    '1H', # 1 hour
-    '1D', # 1 day
-    '7D', # 7 days
-    '14D', # 14 days
-    '30D', # 30 days
-    '90D' # 90 days
+    "900S",  # 15 mins
+    "1H",  # 1 hour
+    "1D",  # 1 day
+    "7D",  # 7 days
+    "14D",  # 14 days
+    "30D",  # 30 days
+    "90D",  # 90 days
 ]
 
 
@@ -25,9 +31,9 @@ time_windows = [
 #################
 freq_config = [
     {
-        # Transaction count grouped by Card_no/PANNumber
+        # Transaction count grouped by Card_no/Card No
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "No",
         "groupby_col": None,
@@ -42,9 +48,9 @@ freq_config = [
         },
     },
     {
-        # Transaction count to each MCC grouped by Card_no/PANNumber
+        # Transaction count to each MCC grouped by Card_no/Card No
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "Yes",
         "groupby_col": "MCC",
@@ -59,9 +65,9 @@ freq_config = [
         },
     },
     {
-        # Transaction count to each MCC Details grouped by Card_no/PANNumber
+        # Transaction count to each MCC Details grouped by Card_no/Card No
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "Yes",
         "groupby_col": "MCC Details",
@@ -76,9 +82,9 @@ freq_config = [
         },
     },
     {
-        # Transaction count to each MCC Trnx Category Code grouped by Card_no/PANNumber
+        # Transaction count to each MCC Trnx Category Code grouped by Card_no/Card No
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "Yes",
         "groupby_col": "MCC Trnx Category Code",
@@ -93,9 +99,9 @@ freq_config = [
         },
     },
     {
-        # Transaction count to each MCC Category grouped by Card_no/PANNumber
+        # Transaction count to each MCC Category grouped by Card_no/Card No
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "Yes",
         "groupby_col": "MCC Category",
@@ -110,20 +116,54 @@ freq_config = [
         },
     },
     {
-        # Transaction Count Same to Category Terminal Owner
+        # Transaction Count Same to Category Cat Card Acceptor Name
         "type": "frequency",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Serial No",
         "groupby_type": "Yes",
-        "groupby_col": "Cat Terminal Owner",
+        "groupby_col": "Cat Card Acceptor Name",
         "windows": {
-            "900S": "TxnCount_to_terminalOwner_cat_L15M",
-            "1H": "TxnCount_to_terminalOwner_cat_L1H",
-            "1D": "TxnCount_to_terminalOwner_cat_L1D",
-            "7D": "TxnCount_to_terminalOwner_cat_L7D",
-            "14D": "TxnCount_to_terminalOwner_cat_L14D",
-            "30D": "TxnCount_to_terminalOwner_cat_L30D",
-            "90D": "TxnCount_to_terminalOwner_cat_L90D",
+            "900S": "TxnCount_to_cardAcceptor_cat_L15M",
+            "1H": "TxnCount_to_cardAcceptor_cat_L1H",
+            "1D": "TxnCount_to_cardAcceptor_cat_L1D",
+            "7D": "TxnCount_to_cardAcceptor_cat_L7D",
+            "14D": "TxnCount_to_cardAcceptor_cat_L14D",
+            "30D": "TxnCount_to_cardAcceptor_cat_L30D",
+            "90D": "TxnCount_to_cardAcceptor_cat_L90D",
+        },
+    },
+    {
+        # Transaction Count Same to Card Acceptor Region Code
+        "type": "frequency",
+        "groupby": "Card No",
+        "amount_col": "Transaction Serial No",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Region Code",
+        "windows": {
+            "900S": "TxnCount_to_cardAcceptor_reg_L15M",
+            "1H": "TxnCount_to_cardAcceptor_reg_L1H",
+            "1D": "TxnCount_to_cardAcceptor_reg_L1D",
+            "7D": "TxnCount_to_cardAcceptor_reg_L7D",
+            "14D": "TxnCount_to_cardAcceptor_reg_L14D",
+            "30D": "TxnCount_to_cardAcceptor_reg_L30D",
+            "90D": "TxnCount_to_cardAcceptor_reg_L90D",
+        },
+    },
+    {
+        # Transaction Count Same to Card Acceptor Country Code
+        "type": "frequency",
+        "groupby": "Card No",
+        "amount_col": "Transaction Serial No",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Country Code",
+        "windows": {
+            "900S": "TxnCount_to_cardAcceptor_country_L15M",
+            "1H": "TxnCount_to_cardAcceptor_country_L1H",
+            "1D": "TxnCount_to_cardAcceptor_country_L1D",
+            "7D": "TxnCount_to_cardAcceptor_country_L7D",
+            "14D": "TxnCount_to_cardAcceptor_country_L14D",
+            "30D": "TxnCount_to_cardAcceptor_country_L30D",
+            "90D": "TxnCount_to_cardAcceptor_country_L90D",
         },
     },
 ]
@@ -134,13 +174,13 @@ freq_config = [
 ################
 monetary_config_1 = [
     {
-        # Average Transaction Amount grouped by PANNumber
+        # Average Transaction Amount grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "No",
         "groupby_col": None,
-        "agg_func": "mean", # need to be defined, if not the default value is `mean`
+        "agg_func": "mean",  # need to be defined, if not the default value is `mean`
         "windows": {
             "900S": "Avg_Amt_L15M",
             "1H": "Avg_Amt_L1H",
@@ -152,9 +192,9 @@ monetary_config_1 = [
         },
     },
     {
-        # Maximum Transaction Amount grouped by PANNumber
+        # Maximum Transaction Amount grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "No",
         "groupby_col": None,
@@ -170,9 +210,9 @@ monetary_config_1 = [
         },
     },
     {
-        # Sum Transaction Amount grouped by PANNumber
+        # Sum Transaction Amount grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "No",
         "groupby_col": None,
@@ -191,9 +231,9 @@ monetary_config_1 = [
 
 monetary_config_2 = [
     {
-        # Average Transaction Amount to MCC grouped by PANNumber
+        # Average Transaction Amount to MCC grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC",
@@ -209,9 +249,9 @@ monetary_config_2 = [
         },
     },
     {
-        # Maximum Transaction Amount to MCC grouped by PANNumber
+        # Maximum Transaction Amount to MCC grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC",
@@ -226,11 +266,10 @@ monetary_config_2 = [
             "90D": "Max_Amt_to_MCC_L90D",
         },
     },
-
     {
-        # Sum Transaction Amount to MCC grouped by PANNumber
+        # Sum Transaction Amount to MCC grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC",
@@ -249,9 +288,9 @@ monetary_config_2 = [
 
 monetary_config_3 = [
     {
-        # Average Transaction Amount to MCC Details grouped by PANNumber
+        # Average Transaction Amount to MCC Details grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Details",
@@ -267,9 +306,9 @@ monetary_config_3 = [
         },
     },
     {
-        # Maximum Transaction Amount to MCC Details grouped by PANNumber
+        # Maximum Transaction Amount to MCC Details grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Details",
@@ -284,11 +323,10 @@ monetary_config_3 = [
             "90D": "Max_Amt_to_MCC_details_L90D",
         },
     },
-
     {
-        # Sum Transaction Amount to MCC Details grouped by PANNumber
+        # Sum Transaction Amount to MCC Details grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Details",
@@ -307,9 +345,9 @@ monetary_config_3 = [
 
 monetary_config_4 = [
     {
-        # Average Transaction Amount to MCC Trnx Category Code grouped by PANNumber
+        # Average Transaction Amount to MCC Trnx Category Code grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Trnx Category Code",
@@ -325,9 +363,9 @@ monetary_config_4 = [
         },
     },
     {
-        # Maximum Transaction Amount to MCC Trnx Category Code grouped by PANNumber
+        # Maximum Transaction Amount to MCC Trnx Category Code grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Trnx Category Code",
@@ -343,9 +381,9 @@ monetary_config_4 = [
         },
     },
     {
-        # Sum Transaction Amount to MCC Trnx Category Code grouped by PANNumber
+        # Sum Transaction Amount to MCC Trnx Category Code grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Trnx Category Code",
@@ -364,9 +402,9 @@ monetary_config_4 = [
 
 monetary_config_5 = [
     {
-        # Average Transaction Amount to MCC Category grouped by PANNumber
+        # Average Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Category",
@@ -382,9 +420,9 @@ monetary_config_5 = [
         },
     },
     {
-        # Maximum Transaction Amount to MCC Category grouped by PANNumber
+        # Maximum Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Category",
@@ -400,9 +438,9 @@ monetary_config_5 = [
         },
     },
     {
-        # Sum Transaction Amount to MCC Category grouped by PANNumber
+        # Sum Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
         "groupby_col": "MCC Category",
@@ -421,57 +459,171 @@ monetary_config_5 = [
 
 monetary_config_6 = [
     {
-        # Average Transaction Amount to MCC Category grouped by PANNumber
+        # Average Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
-        "groupby_col": "Cat Terminal Owner",
+        "groupby_col": "Cat Card Acceptor Name",
         "agg_func": "mean",
         "windows": {
-            "900S": "Avg_Amt_to_terminalOwner_cat_L15M",
-            "1H": "Avg_Amt_to_terminalOwner_cat_L1H",
-            "1D": "Avg_Amt_to_terminalOwner_cat_L1D",
-            "7D": "Avg_Amt_to_terminalOwner_cat_L7D",
-            "14D": "Avg_Amt_to_terminalOwner_cat_L14D",
-            "30D": "Avg_Amt_to_terminalOwner_cat_L30D",
-            "90D": "Avg_Amt_to_terminalOwner_cat_L90D",
+            "900S": "Avg_Amt_to_cardAcceptor_cat_L15M",
+            "1H": "Avg_Amt_to_cardAcceptor_cat_L1H",
+            "1D": "Avg_Amt_to_cardAcceptor_cat_L1D",
+            "7D": "Avg_Amt_to_cardAcceptor_cat_L7D",
+            "14D": "Avg_Amt_to_cardAcceptor_cat_L14D",
+            "30D": "Avg_Amt_to_cardAcceptor_cat_L30D",
+            "90D": "Avg_Amt_to_cardAcceptor_cat_L90D",
         },
     },
     {
-        # Maximum Transaction Amount to MCC Category grouped by PANNumber
+        # Maximum Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
-        "groupby_col": "Cat Terminal Owner",
+        "groupby_col": "Cat Card Acceptor Name",
         "agg_func": "max",
         "windows": {
-            "900S": "Max_Amt_to_terminalOwner_cat_L15M",
-            "1H": "Max_Amt_to_terminalOwner_cat_L1H",
-            "1D": "Max_Amt_to_terminalOwner_cat_L1D",
-            "7D": "Max_Amt_to_terminalOwner_cat_L7D",
-            "14D": "Max_Amt_to_terminalOwner_cat_L14D",
-            "30D": "Max_Amt_to_terminalOwner_cat_L30D",
-            "90D": "Max_Amt_to_terminalOwner_cat_L90D",
+            "900S": "Max_Amt_to_cardAcceptor_cat_L15M",
+            "1H": "Max_Amt_to_cardAcceptor_cat_L1H",
+            "1D": "Max_Amt_to_cardAcceptor_cat_L1D",
+            "7D": "Max_Amt_to_cardAcceptor_cat_L7D",
+            "14D": "Max_Amt_to_cardAcceptor_cat_L14D",
+            "30D": "Max_Amt_to_cardAcceptor_cat_L30D",
+            "90D": "Max_Amt_to_cardAcceptor_cat_L90D",
         },
     },
     {
-        # Sum Transaction Amount to MCC Category grouped by PANNumber
+        # Sum Transaction Amount to MCC Category grouped by Card No
         "type": "monetary",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "amount_col": "Transaction Amount",
         "groupby_type": "Yes",
-        "groupby_col": "Cat Terminal Owner",
+        "groupby_col": "Cat Card Acceptor Name",
         "agg_func": "sum",
         "windows": {
-            "900S": "Sum_Amt_to_terminalOwner_cat_L15M",
-            "1H": "Sum_Amt_to_terminalOwner_cat_L1H",
-            "1D": "Sum_Amt_to_terminalOwner_cat_L1D",
-            "7D": "Sum_Amt_to_terminalOwner_cat_L7D",
-            "14D": "Sum_Amt_to_terminalOwner_cat_L14D",
-            "30D": "Sum_Amt_to_terminalOwner_cat_L30D",
-            "90D": "Sum_Amt_to_terminalOwner_cat_L90D",
+            "900S": "Sum_Amt_to_cardAcceptor_cat_L15M",
+            "1H": "Sum_Amt_to_cardAcceptor_cat_L1H",
+            "1D": "Sum_Amt_to_cardAcceptor_cat_L1D",
+            "7D": "Sum_Amt_to_cardAcceptor_cat_L7D",
+            "14D": "Sum_Amt_to_cardAcceptor_cat_L14D",
+            "30D": "Sum_Amt_to_cardAcceptor_cat_L30D",
+            "90D": "Sum_Amt_to_cardAcceptor_cat_L90D",
+        },
+    },
+]
+
+monetary_config_7 = [
+    {
+        # Average Transaction Amount to Card Acceptor Region Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Region Code",
+        "agg_func": "mean",
+        "windows": {
+            "900S": "Avg_Amt_to_cardAcceptor_reg_L15M",
+            "1H": "Avg_Amt_to_cardAcceptor_reg_L1H",
+            "1D": "Avg_Amt_to_cardAcceptor_reg_L1D",
+            "7D": "Avg_Amt_to_cardAcceptor_reg_L7D",
+            "14D": "Avg_Amt_to_cardAcceptor_reg_L14D",
+            "30D": "Avg_Amt_to_cardAcceptor_reg_L30D",
+            "90D": "Avg_Amt_to_cardAcceptor_reg_L90D",
+        },
+    },
+    {
+        # Maximum Transaction Amount to Card Acceptor Region Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Region Code",
+        "agg_func": "max",
+        "windows": {
+            "900S": "Max_Amt_to_cardAcceptor_reg_L15M",
+            "1H": "Max_Amt_to_cardAcceptor_reg_L1H",
+            "1D": "Max_Amt_to_cardAcceptor_reg_L1D",
+            "7D": "Max_Amt_to_cardAcceptor_reg_L7D",
+            "14D": "Max_Amt_to_cardAcceptor_reg_L14D",
+            "30D": "Max_Amt_to_cardAcceptor_reg_L30D",
+            "90D": "Max_Amt_to_cardAcceptor_reg_L90D",
+        },
+    },
+    {
+        # Sum Transaction Amount to Card Acceptor Region Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Region Code",
+        "agg_func": "sum",
+        "windows": {
+            "900S": "Sum_Amt_to_cardAcceptor_reg_L15M",
+            "1H": "Sum_Amt_to_cardAcceptor_reg_L1H",
+            "1D": "Sum_Amt_to_cardAcceptor_reg_L1D",
+            "7D": "Sum_Amt_to_cardAcceptor_reg_L7D",
+            "14D": "Sum_Amt_to_cardAcceptor_reg_L14D",
+            "30D": "Sum_Amt_to_cardAcceptor_reg_L30D",
+            "90D": "Sum_Amt_to_cardAcceptor_reg_L90D",
+        },
+    },
+]
+
+monetary_config_8 = [
+    {
+        # Average Transaction Amount to Card Acceptor Country Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Country Code",
+        "agg_func": "mean",
+        "windows": {
+            "900S": "Avg_Amt_to_cardAcceptor_country_L15M",
+            "1H": "Avg_Amt_to_cardAcceptor_country_L1H",
+            "1D": "Avg_Amt_to_cardAcceptor_country_L1D",
+            "7D": "Avg_Amt_to_cardAcceptor_country_L7D",
+            "14D": "Avg_Amt_to_cardAcceptor_country_L14D",
+            "30D": "Avg_Amt_to_cardAcceptor_country_L30D",
+            "90D": "Avg_Amt_to_cardAcceptor_country_L90D",
+        },
+    },
+    {
+        # Maximum Transaction Amount to Card Acceptor Country Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Country Code",
+        "agg_func": "max",
+        "windows": {
+            "900S": "Max_Amt_to_cardAcceptor_country_L15M",
+            "1H": "Max_Amt_to_cardAcceptor_country_L1H",
+            "1D": "Max_Amt_to_cardAcceptor_country_L1D",
+            "7D": "Max_Amt_to_cardAcceptor_country_L7D",
+            "14D": "Max_Amt_to_cardAcceptor_country_L14D",
+            "30D": "Max_Amt_to_cardAcceptor_country_L30D",
+            "90D": "Max_Amt_to_cardAcceptor_country_L90D",
+        },
+    },
+    {
+        # Sum Transaction Amount to Card Acceptor Country Code grouped by Card No
+        "type": "monetary",
+        "groupby": "Card No",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "Card Acceptor Country Code",
+        "agg_func": "sum",
+        "windows": {
+            "900S": "Sum_Amt_to_cardAcceptor_country_L15M",
+            "1H": "Sum_Amt_to_cardAcceptor_country_L1H",
+            "1D": "Sum_Amt_to_cardAcceptor_country_L1D",
+            "7D": "Sum_Amt_to_cardAcceptor_country_L7D",
+            "14D": "Sum_Amt_to_cardAcceptor_country_L14D",
+            "30D": "Sum_Amt_to_cardAcceptor_country_L30D",
+            "90D": "Sum_Amt_to_cardAcceptor_country_L90D",
         },
     },
 ]
@@ -482,9 +634,9 @@ monetary_config_6 = [
 ####################
 unique_count_config_1 = [
     {
-        # Count unique (distinct) MCC grouped by PANNumber 
+        # Count unique (distinct) MCC grouped by Card No
         "type": "unique",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "count_col": "MCC Num",
         "windows": {
             "900S": "CntUnique_MCC_by_CardNo_L15M",
@@ -497,10 +649,10 @@ unique_count_config_1 = [
         },
     },
     {
-        # Count unique (distinct) Card_no/PANNumber grouped by MCC
+        # Count unique (distinct) Card_no/Card No grouped by MCC
         "type": "unique",
         "groupby": "MCC",
-        "count_col": "PANNumber Num",
+        "count_col": "Card No Num",
         "windows": {
             "900S": "CntUnique_CardNo_by_MCC_L15M",
             "1H": "CntUnique_CardNo_by_MCC_L1H",
@@ -512,27 +664,57 @@ unique_count_config_1 = [
         },
     },
     {
-        # Count unique (distinct) Card_no/PANNumber grouped by Terminal Owner Cat
+        # Count unique (distinct) Card_no/Card No grouped by Card Acceptor Name Cat
         "type": "unique",
-        "groupby": "Cat Terminal Owner",
-        "count_col": "PANNumber Num",
+        "groupby": "Cat Card Acceptor Name",
+        "count_col": "Card No Num",
         "windows": {
-            "900S": "CntUnique_CardNo_by_terminalOwner_cat_L15M",
-            "1H": "CntUnique_CardNo_by_terminalOwner_cat_L1H",
-            "1D": "CntUnique_CardNo_by_terminalOwner_cat_L1D",
-            "7D": "CntUnique_CardNo_by_terminalOwner_cat_L7D",
-            "14D": "CntUnique_CardNo_by_terminalOwner_cat_L14D",
-            "30D": "CntUnique_CardNo_by_terminalOwner_cat_L30D",
-            "90D": "CntUnique_CardNo_by_terminalOwner_cat_L90D",
+            "900S": "CntUnique_CardNo_by_cardAcceptor_cat_L15M",
+            "1H": "CntUnique_CardNo_by_cardAcceptor_cat_L1H",
+            "1D": "CntUnique_CardNo_by_cardAcceptor_cat_L1D",
+            "7D": "CntUnique_CardNo_by_cardAcceptor_cat_L7D",
+            "14D": "CntUnique_CardNo_by_cardAcceptor_cat_L14D",
+            "30D": "CntUnique_CardNo_by_cardAcceptor_cat_L30D",
+            "90D": "CntUnique_CardNo_by_cardAcceptor_cat_L90D",
+        },
+    },
+    {
+        # Count unique (distinct) Card_no/Card No grouped by Card Acceptor Region Code
+        "type": "unique",
+        "groupby": "Card Acceptor Region Code",
+        "count_col": "Card No Num",
+        "windows": {
+            "900S": "CntUnique_CardNo_by_cardAcceptor_reg_L15M",
+            "1H": "CntUnique_CardNo_by_cardAcceptor_reg_L1H",
+            "1D": "CntUnique_CardNo_by_cardAcceptor_reg_L1D",
+            "7D": "CntUnique_CardNo_by_cardAcceptor_reg_L7D",
+            "14D": "CntUnique_CardNo_by_cardAcceptor_reg_L14D",
+            "30D": "CntUnique_CardNo_by_cardAcceptor_reg_L30D",
+            "90D": "CntUnique_CardNo_by_cardAcceptor_reg_L90D",
+        },
+    },
+    {
+        # Count unique (distinct) Card_no/Card No grouped by Card Acceptor Country Code
+        "type": "unique",
+        "groupby": "Card Acceptor Country Code",
+        "count_col": "Card No Num",
+        "windows": {
+            "900S": "CntUnique_CardNo_by_cardAcceptor_country_L15M",
+            "1H": "CntUnique_CardNo_by_cardAcceptor_country_L1H",
+            "1D": "CntUnique_CardNo_by_cardAcceptor_country_L1D",
+            "7D": "CntUnique_CardNo_by_cardAcceptor_country_L7D",
+            "14D": "CntUnique_CardNo_by_cardAcceptor_country_L14D",
+            "30D": "CntUnique_CardNo_by_cardAcceptor_country_L30D",
+            "90D": "CntUnique_CardNo_by_cardAcceptor_country_L90D",
         },
     },
 ]
 
 unique_count_config_2 = [
     {
-        # Count unique (distinct) Transaction Amount grouped by PANNumber
+        # Count unique (distinct) Transaction Amount grouped by Card No
         "type": "unique",
-        "groupby": "PANNumber",
+        "groupby": "Card No",
         "count_col": "Transaction Amount",
         "windows": {
             "900S": "CntUnique_TrnxAmt_by_CardNo_L15M",
@@ -605,18 +787,48 @@ unique_count_config_2 = [
         },
     },
     {
-        # Count unique (distinct) Transaction Amount grouped by Terminal Owner Category
+        # Count unique (distinct) Transaction Amount grouped by Card Acceptor Name Category
         "type": "unique",
-        "groupby": "Cat Terminal Owner",
+        "groupby": "Cat Card Acceptor Name",
         "count_col": "Transaction Amount",
         "windows": {
-            "900S": "CntUnique_TrnxAmt_by_terminalOwner_cat_L15M",
-            "1H": "CntUnique_TrnxAmt_by_terminalOwner_cat_L1H",
-            "1D": "CntUnique_TrnxAmt_by_terminalOwner_cat_L1D",
-            "7D": "CntUnique_TrnxAmt_by_terminalOwner_cat_L7D",
-            "14D": "CntUnique_TrnxAmt_by_terminalOwner_cat_L14D",
-            "30D": "CntUnique_TrnxAmt_by_terminalOwner_cat_L30D",
-            "90D": "CntUnique_TrnxAmt_by_terminalOwner_cat_L90D",
+            "900S": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L15M",
+            "1H": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L1H",
+            "1D": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L1D",
+            "7D": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L7D",
+            "14D": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L14D",
+            "30D": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L30D",
+            "90D": "CntUnique_TrnxAmt_by_cardAcceptor_cat_L90D",
+        },
+    },
+    {
+        # Count unique (distinct) Transaction Amount grouped by Card Acceptor Region Code
+        "type": "unique",
+        "groupby": "Card Acceptor Region Code",
+        "count_col": "Transaction Amount",
+        "windows": {
+            "900S": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L15M",
+            "1H": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L1H",
+            "1D": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L1D",
+            "7D": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L7D",
+            "14D": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L14D",
+            "30D": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L30D",
+            "90D": "CntUnique_TrnxAmt_by_cardAcceptor_reg_L90D",
+        },
+    },
+    {
+        # Count unique (distinct) Transaction Amount grouped by Card Acceptor Country Code
+        "type": "unique",
+        "groupby": "Card Acceptor Country Code",
+        "count_col": "Transaction Amount",
+        "windows": {
+            "900S": "CntUnique_TrnxAmt_by_cardAcceptor_country_L15M",
+            "1H": "CntUnique_TrnxAmt_by_cardAcceptor_country_L1H",
+            "1D": "CntUnique_TrnxAmt_by_cardAcceptor_country_L1D",
+            "7D": "CntUnique_TrnxAmt_by_cardAcceptor_country_L7D",
+            "14D": "CntUnique_TrnxAmt_by_cardAcceptor_country_L14D",
+            "30D": "CntUnique_TrnxAmt_by_cardAcceptor_country_L30D",
+            "90D": "CntUnique_TrnxAmt_by_cardAcceptor_country_L90D",
         },
     },
 ]
