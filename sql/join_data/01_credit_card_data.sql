@@ -2,7 +2,7 @@ DECLARE @sampling_percentage FLOAT = {sampling_pct};
 
 WITH tsf_credit AS (
     SELECT *
-    FROM Transaction_Summary_Fraud
+    FROM Transaction_Summary_Fraud_Hashed
     WHERE Channel = 'C03'
     AND Channel = 'C09'
 )
@@ -25,7 +25,7 @@ WITH tsf_credit AS (
 		, c03.[Terminal Country] AS 'Card Acceptor Country Code'
 		, c03.[Currency Code]
         , tsf_credit.Confirmed
-    FROM C03_Details AS c03
+    FROM C03_Details_Hashed AS c03
     LEFT JOIN tsf_credit
         ON c03.[Transaction Serial No] = tsf_credit.[Transaction Serial No]
 
@@ -48,7 +48,7 @@ WITH tsf_credit AS (
 		, c09.[Card Acceptor Country Code]
 		, c09.[Transaction Currency Code] AS 'Currency Code'
         , tsf_credit.Confirmed
-    FROM C09_Details AS c09
+    FROM C09_Details_Hashed AS c09
     LEFT JOIN tsf_credit
         ON c09.[Transaction_Serial_No] = tsf_credit.[Transaction Serial No]
 )
@@ -290,5 +290,5 @@ SELECT
 	, tscf.IsFacebookBlacklistMerchant
 	, t_final.Confirmed
 FROM t_final
-LEFT JOIN Transaction_Summary_Calculations_Fraud tscf
+LEFT JOIN Transaction_Summary_Calculations_Fraud_Hashed tscf
 	ON t_final.[Transaction Serial No] = tscf.[Transaction Serial No]
