@@ -264,6 +264,21 @@ def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
     return df_processed
 
 
+# --- IdentityTransformer Class---
+class IdentityTransformer(BaseEstimator, TransformerMixin):
+    """
+    A simple transformer that returns the input unchanged.
+    Used as a placeholder in scikit-learn Pipelines when no transformation is needed
+    at a particular step, but a transformer object is required.
+    """
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        return X
+
+
 # --- ModelPipeline Class ---
 class ModelPipeline:
     def _init_lightgbm(self):
@@ -466,18 +481,15 @@ class ModelPipeline:
         This sklearn.Pipeline primarily wraps the classifier.
         """
         print("Building pipeline...")
-
-        # IdentityTransformer is used to allow the classifier to be the final step
         # The data fed to this pipeline is expected to be already fully preprocessed
-        class IdentityTransformer(BaseEstimator, TransformerMixin):
-            def fit(self, X, y=None):
-                return self
-
-            def transform(self, X):
-                return X
-
         self.pipeline = Pipeline(
-            [("identity", IdentityTransformer()), ("classifier", self.model)]
+            [
+                (
+                    "identity",
+                    IdentityTransformer(),
+                ),
+                ("classifier", self.model),
+            ]
         )
         print("Pipeline built.")
 
@@ -707,7 +719,7 @@ class ModelPipeline:
                     (
                         "identity",
                         IdentityTransformer(),
-                    ),  # Use the nested IdentityTransformer
+                    ),
                     ("classifier", fold_model),
                 ]
             )
