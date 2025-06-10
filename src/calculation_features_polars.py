@@ -47,16 +47,13 @@ def calculate_frequency(
         grouping_keys = [groupby, groupby_col]
 
     # Apply dynamic grouping with frequency count
-    rolled = (
-        df.groupby_dynamic(
-            index_column=datetime_col,
-            every=window,
-            period=window,
-            by=grouping_keys,
-            closed="left"
-        )
-        .agg(pl.count().alias(out_col))
-    )
+    rolled = df.groupby_dynamic(
+        index_column=datetime_col,
+        every=window,
+        period=window,
+        by=grouping_keys,
+        closed="left",
+    ).agg(pl.count().alias(out_col))
 
     # Fill nulls if needed
     if na_value is not None:
@@ -122,18 +119,25 @@ def calculate_monetary(
 
     # Define aggregation function
     def aggregate_window(group):
-        return group.with_columns([
-            pl.col(datetime_col).map_elements(
-                lambda current_time, group=group: getattr(
-                    group.filter(
-                        (pl.col(datetime_col) < current_time) &
-                        (pl.col(datetime_col) >= current_time - pl.duration(**duration_kwargs))
-                    )[amount_col],
-                    agg_func
-                )(),
-                return_dtype=pl.Float64
-            ).alias(out_col)
-        ])
+        return group.with_columns(
+            [
+                pl.col(datetime_col)
+                .map_elements(
+                    lambda current_time, group=group: getattr(
+                        group.filter(
+                            (pl.col(datetime_col) < current_time)
+                            & (
+                                pl.col(datetime_col)
+                                >= current_time - pl.duration(**duration_kwargs)
+                            )
+                        )[amount_col],
+                        agg_func,
+                    )(),
+                    return_dtype=pl.Float64,
+                )
+                .alias(out_col)
+            ]
+        )
 
     # Apply groupby logic
     if groupby_type == "No":
@@ -145,9 +149,7 @@ def calculate_monetary(
 
     # Fill NA if needed
     if na_value is not None:
-        result = result.with_columns(
-            pl.col(out_col).fill_null(na_value)
-        )
+        result = result.with_columns(pl.col(out_col).fill_null(na_value))
 
     # Select final columns
     return result.select([key, groupby, datetime_col, out_col])
@@ -197,29 +199,32 @@ def calculate_unique_count(
         raise ValueError("Unsupported window format. Use 'd', 'h', or 'm'.")
 
     # Apply rolling unique count manually
-    result = (
-        df.groupby(groupby)
-        .apply(
-            lambda group: group.with_columns([
-                pl.col(datetime_col).map_elements(
+    result = df.groupby(groupby).apply(
+        lambda group: group.with_columns(
+            [
+                pl.col(datetime_col)
+                .map_elements(
                     lambda current_time, group=group: group.filter(
-                        (pl.col(datetime_col) < current_time) &
-                        (pl.col(datetime_col) >= current_time - pl.duration(**duration_kwargs))
-                    )[count_col].unique().len(),
-                    return_dtype=pl.Int32
-                ).alias(out_col)
-            ])
+                        (pl.col(datetime_col) < current_time)
+                        & (
+                            pl.col(datetime_col)
+                            >= current_time - pl.duration(**duration_kwargs)
+                        )
+                    )[count_col]
+                    .unique()
+                    .len(),
+                    return_dtype=pl.Int32,
+                )
+                .alias(out_col)
+            ]
         )
     )
 
     # Fill NA if specified
     if na_value is not None:
-        result = result.with_columns(
-            pl.col(out_col).fill_null(na_value)
-        )
+        result = result.with_columns(pl.col(out_col).fill_null(na_value))
 
     return result
-
 
 
 def calculate_time_differences(
@@ -242,7 +247,9 @@ def calculate_time_differences(
     Returns:
     - pl.DataFrame with time differences and rolling averages
     """
-    df = df.with_columns(pl.col(datetime_col).str.strptime(pl.Datetime, fmt="%Y-%m-%d %H:%M:%S"))
+    df = df.with_columns(
+        pl.col(datetime_col).str.strptime(pl.Datetime, fmt="%Y-%m-%d %H:%M:%S")
+    )
 
     for new_col, groupby_cols in config.items():
         df = df.sort(by=groupby_cols + [datetime_col])
@@ -250,22 +257,28 @@ def calculate_time_differences(
         if len(groupby_cols) == 1:
             # Simple time difference
             df = df.with_columns(
-                (pl.col(datetime_col).diff().dt.seconds() / 60).over(groupby_cols).alias(new_col)
+                (pl.col(datetime_col).diff().dt.seconds() / 60)
+                .over(groupby_cols)
+                .alias(new_col)
             )
         else:
             # Conditional time difference
             primary_group = groupby_cols[0]
             change_col = groupby_cols[-1]
 
-            df = df.with_columns([
-                pl.col(datetime_col).shift().over(primary_group).alias("prev_time"),
-                pl.col(change_col).shift().over(primary_group).alias("prev_val"),
-            ])
-            df = df.with_columns([
-                ((pl.col(datetime_col) - pl.col("prev_time")).dt.seconds() / 60)
-                .filter(pl.col(change_col) != pl.col("prev_val"))
-                .alias(new_col)
-            ])
+            df = df.with_columns(
+                [
+                    pl.col(datetime_col).shift().over(primary_group).alias("prev_time"),
+                    pl.col(change_col).shift().over(primary_group).alias("prev_val"),
+                ]
+            )
+            df = df.with_columns(
+                [
+                    ((pl.col(datetime_col) - pl.col("prev_time")).dt.seconds() / 60)
+                    .filter(pl.col(change_col) != pl.col("prev_val"))
+                    .alias(new_col)
+                ]
+            )
             df = df.drop(["prev_time", "prev_val"])
 
         # Rolling averages
@@ -354,11 +367,7 @@ def generate_rolling_features(
     df_merged = df
     for feat_df, merge_keys in all_feature_dfs:
         df_merged = df_merged.join(
-            feat_df,
-            left_on=merge_keys,
-            right_on=merge_keys,
-            how="left"
+            feat_df, left_on=merge_keys, right_on=merge_keys, how="left"
         )
 
     return df_merged
-
