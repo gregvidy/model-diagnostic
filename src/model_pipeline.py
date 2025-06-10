@@ -5,11 +5,19 @@ import pickle
 import xgboost as xgb
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.metrics import accuracy_score, roc_auc_score, average_precision_score, precision_score, recall_score, classification_report
+from sklearn.metrics import (
+    accuracy_score,
+    roc_auc_score,
+    average_precision_score,
+    precision_score,
+    recall_score,
+    classification_report,
+)
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 from sklearn.inspection import permutation_importance
 from tqdm import tqdm
+
 
 # --- CategoryManager Class ---
 class CategoryManager:
@@ -18,8 +26,9 @@ class CategoryManager:
     Fits on training data to store categories and transforms new data
     based on the learned categories, mapping unseen categories to a missing code.
     """
+
     def __init__(self):
-        self.category_map = {} # Stores {column_name: pandas.CategoricalIndex}
+        self.category_map = {}  # Stores {column_name: pandas.CategoricalIndex}
 
     def fit(self, X: pd.DataFrame, categorical_columns: list):
         """
@@ -27,7 +36,7 @@ class CategoryManager:
         Adds a '__missing__' category and fills NaNs.
         """
         print("Fitting CategoryManager...")
-        X_copy = X.copy() # Work on a copy to avoid modifying original df during fit
+        X_copy = X.copy()  # Work on a copy to avoid modifying original df during fit
         for col in categorical_columns:
             if col not in X_copy.columns:
                 print(f"Warning: Column '{col}' not found in DataFrame for fitting.")
@@ -35,11 +44,13 @@ class CategoryManager:
             # Ensure column is category type and handle NaNs consistently
             X_copy[col] = X_copy[col].astype("category")
             # Add '__missing__' explicitly before filling to ensure it's always available
-            if '__missing__' not in X_copy[col].cat.categories:
+            if "__missing__" not in X_copy[col].cat.categories:
                 X_copy[col] = X_copy[col].cat.add_categories("__missing__")
             X_copy[col] = X_copy[col].fillna("__missing__")
             self.category_map[col] = X_copy[col].cat.categories
-            print(f"  Fitted categories for column '{col}': {list(self.category_map[col])}")
+            print(
+                f"  Fitted categories for column '{col}': {list(self.category_map[col])}"
+            )
         print("CategoryManager fitting complete.")
         return self
 
@@ -53,7 +64,9 @@ class CategoryManager:
         X_transformed = X.copy()
         for col, categories in self.category_map.items():
             if col not in X_transformed.columns:
-                print(f"Warning: Column '{col}' not found in DataFrame for transformation. Skipping.")
+                print(
+                    f"Warning: Column '{col}' not found in DataFrame for transformation. Skipping."
+                )
                 continue
 
             # Convert to category type
@@ -62,15 +75,17 @@ class CategoryManager:
             # Set categories to the ones learned during fit.
             # `set_categories` will make new categories NaN, and `fillna` will handle them.
             # Ensure '__missing__' is in categories for robustness
-            if '__missing__' not in categories:
+            if "__missing__" not in categories:
                 # This should ideally not happen if fit() was called correctly
                 # For safety, if it's missing, we'll try to add it.
                 categories_list = list(categories)
-                categories_list.append('__missing__')
+                categories_list.append("__missing__")
                 categories = pd.CategoricalIndex(categories_list)
 
             X_transformed[col] = X_transformed[col].cat.set_categories(categories)
-            X_transformed[col] = X_transformed[col].fillna("__missing__") # Fill with '__missing__' before getting codes
+            X_transformed[col] = X_transformed[col].fillna(
+                "__missing__"
+            )  # Fill with '__missing__' before getting codes
 
             # Convert categories to numerical codes
             X_transformed[col] = X_transformed[col].cat.codes
@@ -100,6 +115,7 @@ class CategoryManager:
             self.category_map = pickle.load(f)
         print("Load complete.")
 
+
 # --- NumericalImputer Class ---
 class NumericalImputer:
     """
@@ -107,18 +123,21 @@ class NumericalImputer:
     Fits on training data to store medians and transforms new data
     using those stored medians.
     """
+
     def __init__(self):
-        self.imputation_values = {} # Stores {column_name: median_value}
+        self.imputation_values = {}  # Stores {column_name: median_value}
 
     def fit(self, X: pd.DataFrame, numerical_columns: list):
         """
         Fits the NumericalImputer by learning median values for specified columns.
         """
         print("Fitting NumericalImputer...")
-        X_copy = X.copy() # Work on a copy to avoid modifying original df during fit
+        X_copy = X.copy()  # Work on a copy to avoid modifying original df during fit
         for col in numerical_columns:
             if col not in X_copy.columns:
-                print(f"Warning: Column '{col}' not found in DataFrame for fitting NumericalImputer. Skipping.")
+                print(
+                    f"Warning: Column '{col}' not found in DataFrame for fitting NumericalImputer. Skipping."
+                )
                 continue
             # Replace infinities with NaN first, then calculate median
             X_copy[col] = X_copy[col].replace([np.inf, -np.inf], np.nan)
@@ -126,7 +145,9 @@ class NumericalImputer:
             if pd.isna(median_val):
                 # Fallback to 0 if all values are NaN in training data
                 self.imputation_values[col] = 0
-                print(f"  Warning: All values in numerical column '{col}' are NaN. Imputing with 0.")
+                print(
+                    f"  Warning: All values in numerical column '{col}' are NaN. Imputing with 0."
+                )
             else:
                 self.imputation_values[col] = median_val
                 print(f"  Fitted median for column '{col}': {median_val}")
@@ -142,7 +163,9 @@ class NumericalImputer:
         X_transformed = X.copy()
         for col, median_val in self.imputation_values.items():
             if col not in X_transformed.columns:
-                print(f"Warning: Column '{col}' not found in DataFrame for transformation. Skipping.")
+                print(
+                    f"Warning: Column '{col}' not found in DataFrame for transformation. Skipping."
+                )
                 continue
             # Replace infinities with NaN first, then fill NaNs
             X_transformed[col] = X_transformed[col].replace([np.inf, -np.inf], np.nan)
@@ -173,8 +196,8 @@ class NumericalImputer:
             self.imputation_values = pickle.load(f)
         print("Load complete.")
 
-# --- Core Preprocessing Functions ---
 
+# --- Core Preprocessing Functions ---
 def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
     """
     Performs core numeric and boolean preprocessing:
@@ -187,42 +210,54 @@ def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
     df_processed = df.copy()
 
     # Downcast float columns for memory efficiency
-    float_cols = df_processed.select_dtypes(include=['float32', 'float64']).columns
+    float_cols = df_processed.select_dtypes(include=["float32", "float64"]).columns
     print(f"  Float columns to downcast: {list(float_cols)}")
     for col in float_cols:
         try:
-            df_processed[col] = pd.to_numeric(df_processed[col], downcast='float')
+            df_processed[col] = pd.to_numeric(df_processed[col], downcast="float")
             print(f"  Downcasted column: {col}")
         except Exception as e:
             print(f"  Error downcasting column {col}: {e}. Keeping as float64.")
-            df_processed[col] = df_processed[col].astype('float64')
+            df_processed[col] = df_processed[col].astype("float64")
 
     # Handle 'Y'/'N' mappings for object columns and 'Is*' columns
     for col in df_processed.columns:
-        if df_processed[col].dtype == 'object':
-            df_processed[col] = df_processed[col].replace(r'^\s*$', np.nan, regex=True)
+        if df_processed[col].dtype == "object":
+            df_processed[col] = df_processed[col].replace(r"^\s*$", np.nan, regex=True)
             unique_vals = df_processed[col].dropna().unique()
-            if set(unique_vals).issubset({'Y', 'N'}):
+            if set(unique_vals).issubset({"Y", "N"}):
                 print(f"  Mapping Y/N to 1/0 in column: {col}")
-                df_processed[col] = df_processed[col].map({'N': 0, 'Y': 1})
-        if col.startswith('Is') and df_processed[col].dtype in ['object', 'int64', 'bool']:
-            if df_processed[col].dtype == 'object' and set(df_processed[col].dropna().unique()).issubset({'Y', 'N'}):
+                df_processed[col] = df_processed[col].map({"N": 0, "Y": 1})
+        if col.startswith("Is") and df_processed[col].dtype in [
+            "object",
+            "int64",
+            "bool",
+        ]:
+            if df_processed[col].dtype == "object" and set(
+                df_processed[col].dropna().unique()
+            ).issubset({"Y", "N"}):
                 print(f"  Mapping Is* column Y/N to 1/0: {col}")
-                df_processed[col] = df_processed[col].map({'N': 0, 'Y': 1})
-            elif df_processed[col].dtype in ['int64', 'bool']:
+                df_processed[col] = df_processed[col].map({"N": 0, "Y": 1})
+            elif df_processed[col].dtype in ["int64", "bool"]:
                 try:
                     df_processed[col] = df_processed[col].astype(np.int8)
                     print(f"  Converted Is* column '{col}' to int8.")
                 except Exception as e:
-                    print(f"  Could not convert Is* column '{col}' to int8: {e}. Keeping current dtype.")
+                    print(
+                        f"  Could not convert Is* column '{col}' to int8: {e}. Keeping current dtype."
+                    )
 
     # Apply log10 transform to 'amount'/'limit' related float columns
-    current_float_cols = df_processed.select_dtypes(include=['float32', 'float64']).columns
+    current_float_cols = df_processed.select_dtypes(
+        include=["float32", "float64"]
+    ).columns
     for col in current_float_cols:
-        if any(k in col.lower() for k in ['amt', 'amount', 'limit']):
+        if any(k in col.lower() for k in ["amt", "amount", "limit"]):
             print(f"  Applying log10 transform to column: {col}")
             vals = df_processed[col]
-            df_processed[col] = np.log10(vals.fillna(0) + 1) # Fill NaN with 0 before log transform
+            df_processed[col] = np.log10(
+                vals.fillna(0) + 1
+            )  # Fill NaN with 0 before log transform
             print(f"  Log10 transformed column: {col}")
 
     print("Core numeric and boolean preprocessing complete.")
@@ -235,11 +270,11 @@ class ModelPipeline:
         print("Initializing LightGBM model...")
         return lgb.LGBMClassifier(
             n_estimators=1000,
-            class_weight='balanced',
+            class_weight="balanced",
             random_state=self.random_state,
-            n_jobs=-1, # Use all available cores
-            objective='binary', # For binary classification
-            metric='auc', # Evaluation metric
+            n_jobs=-1,  # Use all available cores
+            objective="binary",  # For binary classification
+            metric="auc",  # Evaluation metric
         )
 
     def __init__(self, model_type="xgboost", random_state=42):
@@ -249,23 +284,23 @@ class ModelPipeline:
         self.model = self._get_model(model_type)
         self.pipeline = None
         self.cv_scores = None
-        self.category_manager = CategoryManager() # Initialize CategoryManager
-        self.numerical_imputer = NumericalImputer() # Initialize NumericalImputer
+        self.category_manager = CategoryManager()  # Initialize CategoryManager
+        self.numerical_imputer = NumericalImputer()  # Initialize NumericalImputer
 
         # Store column names after prepare_data for consistent handling across methods
         self.numerical_columns = []
         self.categorical_columns = []
-        self.feature_columns = [] # To store the final list of feature names
+        self.feature_columns = []  # To store the final list of feature names
 
     def _get_model(self, model_type):
         print(f"Retrieving model instance for type: {model_type}")
         models = {
             "xgboost": xgb.XGBClassifier(
                 n_estimators=1000,
-                use_label_encoder=False, # Deprecated in new XGBoost versions, good to set.
-                eval_metric="logloss", # Or 'auc' for binary classification
+                use_label_encoder=False,  # Deprecated in new XGBoost versions, good to set.
+                eval_metric="logloss",  # Or 'auc' for binary classification
                 random_state=self.random_state,
-                n_jobs=-1, # Use all available cores
+                n_jobs=-1,  # Use all available cores
             ),
             "lightgbm": self._init_lightgbm(),
         }
@@ -273,7 +308,13 @@ class ModelPipeline:
             raise ValueError(f"Unsupported model_type: {model_type}")
         return models[model_type]
 
-    def prepare_data(self, df: pd.DataFrame, target_column: str, exclude_columns: list = None, is_training: bool = True):
+    def prepare_data(
+        self,
+        df: pd.DataFrame,
+        target_column: str,
+        exclude_columns: list = None,
+        is_training: bool = True,
+    ):
         """
         Preprocesses the input DataFrame, separates features (X) and target (y),
         identifies numerical and categorical columns, and applies learned transformations.
@@ -298,23 +339,29 @@ class ModelPipeline:
         # Step 1: Separate target and features, and apply core transformations
         y = df[target_column].copy()
         columns_to_drop = [target_column] + (exclude_columns or [])
-        X_raw = df.drop(columns=columns_to_drop, errors='ignore').copy()
+        X_raw = df.drop(columns=columns_to_drop, errors="ignore").copy()
 
         # Apply core preprocessing that doesn't require fitting
         X_processed_core = preprocess_numerics_and_bools_core(X_raw)
 
         # Identify numerical and categorical columns *after* core preprocessing
         # and before CategoryManager and NumericalImputer
-        current_object_cols = X_processed_core.select_dtypes(include='object').columns.tolist()
-        current_numeric_cols = X_processed_core.select_dtypes(include=['number']).columns.tolist()
+        current_object_cols = X_processed_core.select_dtypes(
+            include="object"
+        ).columns.tolist()
+        current_numeric_cols = X_processed_core.select_dtypes(
+            include=["number"]
+        ).columns.tolist()
 
         # Step 2: Handle categorical columns with CategoryManager
         if is_training:
             if not current_object_cols:
                 print("No object columns found for CategoryManager to fit_transform.")
             else:
-                X_transformed = self.category_manager.fit_transform(X_processed_core, current_object_cols)
-        else: # is_training is False, so transform mode
+                X_transformed = self.category_manager.fit_transform(
+                    X_processed_core, current_object_cols
+                )
+        else:  # is_training is False, so transform mode
             X_transformed = self.category_manager.transform(X_processed_core)
 
         # After category manager, some object columns are now numerical (int codes)
@@ -334,7 +381,9 @@ class ModelPipeline:
 
         # Step 3: Handle numerical columns with NumericalImputer
         if is_training:
-            X_final = self.numerical_imputer.fit_transform(X_transformed, self.numerical_columns)
+            X_final = self.numerical_imputer.fit_transform(
+                X_transformed, self.numerical_columns
+            )
         else:
             X_final = self.numerical_imputer.transform(X_transformed)
 
@@ -342,7 +391,7 @@ class ModelPipeline:
         self.feature_columns = X_final.columns.tolist()
         print(f"Final feature columns: {self.feature_columns}")
 
-        gc.collect() # Free up memory
+        gc.collect()  # Free up memory
         print("Data preparation complete.")
         return X_final, y
 
@@ -352,8 +401,7 @@ class ModelPipeline:
         """
         print("Splitting data into train and test sets...")
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=test_size, stratify=y,
-            random_state=self.random_state
+            X, y, test_size=test_size, stratify=y, random_state=self.random_state
         )
         print("Data splitting complete.")
         return {
@@ -363,7 +411,13 @@ class ModelPipeline:
             "y_test": y_test,
         }
 
-    def split_data_by_date(self, df: pd.DataFrame, target_column: str, date_column: str, split_date: str, exclude_columns: list = None):
+    def split_data_by_date(
+        self,
+        X: pd.DataFrame,
+        y: pd.Series,
+        date_column: str,
+        split_date: str,
+    ):
         """
         Splits data into training and testing sets based on a date column *before* full preprocessing.
         The data returned by this method will still need to be processed by `prepare_data`
@@ -371,30 +425,38 @@ class ModelPipeline:
         """
         print("Splitting data by date (pre-preprocessing)...")
         # Ensure date_column is datetime type for comparison
-        if not pd.api.types.is_datetime64_any_dtype(df[date_column]):
+        if not pd.api.types.is_datetime64_any_dtype(X[date_column]):
             try:
-                df[date_column] = pd.to_datetime(df[date_column])
+                X[date_column] = pd.to_datetime(X[date_column])
                 print(f"  Converted '{date_column}' to datetime type.")
             except Exception as e:
-                raise TypeError(f"Could not convert '{date_column}' to datetime format: {e}")
+                raise TypeError(
+                    f"Could not convert '{date_column}' to datetime format: {e}"
+                )
 
         # Ensure split_date is datetime
         try:
             split_date = pd.to_datetime(split_date)
         except Exception as e:
-            raise ValueError(f"Invalid split_date format: {e}. Please provide a valid date string.")
+            raise ValueError(
+                f"Invalid split_date format: {e}. Please provide a valid date string."
+            )
 
-        df_train = df[df[date_column] < split_date].copy()
-        df_test = df[df[date_column] >= split_date].copy()
+        X_train = X[X[date_column] < split_date].copy()
+        X_test = X[X[date_column] >= split_date].copy()
+        y_train = y.loc[X_train.index].copy()
+        y_test = y.loc[X_test.index].copy()
 
-        print(f"Train samples: {len(df_train)}, Test samples: {len(df_test)}")
+        print(f"Train samples: {len(X_train)}, Test samples: {len(X_test)}")
 
         # Return raw DFs for split, so prepare_data can be called on each
+        print("Data splitting complete.")
         return {
-            "df_train": df_train,
-            "df_test": df_test,
+            "X_train": X_train,
+            "X_test": X_test,
+            "y_train": y_train,
+            "y_test": y_test,
         }
-
 
     def build_pipeline(self):
         """
@@ -404,21 +466,24 @@ class ModelPipeline:
         This sklearn.Pipeline primarily wraps the classifier.
         """
         print("Building pipeline...")
+
         # IdentityTransformer is used to allow the classifier to be the final step
         # The data fed to this pipeline is expected to be already fully preprocessed
         class IdentityTransformer(BaseEstimator, TransformerMixin):
             def fit(self, X, y=None):
                 return self
+
             def transform(self, X):
                 return X
 
-        self.pipeline = Pipeline([
-            ('identity', IdentityTransformer()),
-            ('classifier', self.model)
-        ])
+        self.pipeline = Pipeline(
+            [("identity", IdentityTransformer()), ("classifier", self.model)]
+        )
         print("Pipeline built.")
 
-    def train(self, X_train: pd.DataFrame, y_train: pd.Series, show_training_log: bool = False):
+    def train(
+        self, X_train: pd.DataFrame, y_train: pd.Series, show_training_log: bool = False
+    ):
         """
         Trains the model using the preprocessed training data.
         X_train and y_train are expected to be the output of prepare_data(is_training=True).
@@ -428,8 +493,12 @@ class ModelPipeline:
             raise RuntimeError("Pipeline not built. Call build_pipeline() first.")
 
         # Ensure feature columns are consistent (important if X_train gets reindexed)
-        if self.feature_columns and not X_train.columns.equals(pd.Index(self.feature_columns)):
-            print("Warning: Training data columns do not match expected feature columns. Realigning.")
+        if self.feature_columns and not X_train.columns.equals(
+            pd.Index(self.feature_columns)
+        ):
+            print(
+                "Warning: Training data columns do not match expected feature columns. Realigning."
+            )
             X_train = X_train[self.feature_columns]
 
         if show_training_log and self.model_type == "xgboost":
@@ -439,7 +508,9 @@ class ModelPipeline:
             }
             self.pipeline.fit(X_train, y_train, **params)
         elif show_training_log and self.model_type == "lightgbm":
-            self.pipeline.fit(X_train, y_train, classifier__callbacks=[lgb.log_evaluation(period=50)])
+            self.pipeline.fit(
+                X_train, y_train, classifier__callbacks=[lgb.log_evaluation(period=50)]
+            )
         else:
             self.pipeline.fit(X_train, y_train)
         print("Model training complete.")
@@ -454,8 +525,12 @@ class ModelPipeline:
             raise RuntimeError("Model not trained. Call train() first.")
 
         # Ensure feature columns are consistent
-        if self.feature_columns and not X_test.columns.equals(pd.Index(self.feature_columns)):
-            print("Warning: Test data columns do not match expected feature columns. Realigning.")
+        if self.feature_columns and not X_test.columns.equals(
+            pd.Index(self.feature_columns)
+        ):
+            print(
+                "Warning: Test data columns do not match expected feature columns. Realigning."
+            )
             X_test = X_test[self.feature_columns]
 
         y_pred = self.pipeline.predict(X_test)
@@ -494,20 +569,26 @@ class ModelPipeline:
         # Preprocess the new data using the *fitted* category_manager and numerical_imputer
         # from the training phase of the pipeline.
         X_new_preprocessed, _ = self.prepare_data(
-            X_new.copy(), # Pass a copy of the raw new data
-            target_column=None, # No target column in new data
-            is_training=False # Crucial: only transform, do not fit
+            X_new.copy(),  # Pass a copy of the raw new data
+            target_column=None,  # No target column in new data
+            is_training=False,  # Crucial: only transform, do not fit
         )
 
         # Ensure feature columns are consistent
-        if self.feature_columns and not X_new_preprocessed.columns.equals(pd.Index(self.feature_columns)):
-            print("Warning: New data columns do not match expected feature columns. Realigning.")
+        if self.feature_columns and not X_new_preprocessed.columns.equals(
+            pd.Index(self.feature_columns)
+        ):
+            print(
+                "Warning: New data columns do not match expected feature columns. Realigning."
+            )
             X_new_preprocessed = X_new_preprocessed[self.feature_columns]
             # Handle potentially missing columns in new data that were present in training
             missing_cols = set(self.feature_columns) - set(X_new_preprocessed.columns)
             for col in missing_cols:
-                X_new_preprocessed[col] = 0 # Or a default value if appropriate
-                print(f"  Added missing feature column '{col}' to new data with default value 0.")
+                X_new_preprocessed[col] = 0  # Or a default value if appropriate
+                print(
+                    f"  Added missing feature column '{col}' to new data with default value 0."
+                )
 
         predictions = self.pipeline.predict(X_new_preprocessed)
         print("Prediction complete.")
@@ -524,24 +605,32 @@ class ModelPipeline:
 
         # Preprocess the new data using the *fitted* category_manager and numerical_imputer
         X_new_preprocessed, _ = self.prepare_data(
-            X_new.copy(),
-            target_column=None,
-            is_training=False
+            X_new.copy(), target_column=None, is_training=False
         )
 
         # Ensure feature columns are consistent
-        if self.feature_columns and not X_new_preprocessed.columns.equals(pd.Index(self.feature_columns)):
-            print("Warning: New data columns do not match expected feature columns. Realigning.")
+        if self.feature_columns and not X_new_preprocessed.columns.equals(
+            pd.Index(self.feature_columns)
+        ):
+            print(
+                "Warning: New data columns do not match expected feature columns. Realigning."
+            )
             X_new_preprocessed = X_new_preprocessed[self.feature_columns]
             missing_cols = set(self.feature_columns) - set(X_new_preprocessed.columns)
             for col in missing_cols:
-                X_new_preprocessed[col] = 0 # Or a default value if appropriate
+                X_new_preprocessed[col] = 0  # Or a default value if appropriate
 
         probabilities = self.pipeline.predict_proba(X_new_preprocessed)[:, 1]
         print("Probability calculation complete.")
         return probabilities
 
-    def cross_validate(self, df_full: pd.DataFrame, target_column: str, exclude_columns: list = None, cv: int = 5):
+    def cross_validate(
+        self,
+        df_full: pd.DataFrame,
+        target_column: str,
+        exclude_columns: list = None,
+        cv: int = 5,
+    ):
         """
         Performs cross-validation on the data.
         A new CategoryManager and NumericalImputer are initialized for each fold to prevent data leakage.
@@ -559,9 +648,11 @@ class ModelPipeline:
         # This X will contain original columns, not yet fully preprocessed by the main pipeline's managers
         y_full = df_full[target_column]
         columns_to_drop_cv = [target_column] + (exclude_columns or [])
-        X_full = df_full.drop(columns=columns_to_drop_cv, errors='ignore')
+        X_full = df_full.drop(columns=columns_to_drop_cv, errors="ignore")
 
-        for i, (tr_idx, te_idx) in enumerate(tqdm(skf.split(X_full, y_full), total=cv, desc="CV folds"), 1):
+        for i, (tr_idx, te_idx) in enumerate(
+            tqdm(skf.split(X_full, y_full), total=cv, desc="CV folds"), 1
+        ):
             print(f"--- Training fold {i}/{cv} ---")
             X_tr_raw, y_tr = X_full.iloc[tr_idx].copy(), y_full.iloc[tr_idx].copy()
             X_te_raw, y_te = X_full.iloc[te_idx].copy(), y_full.iloc[te_idx].copy()
@@ -574,18 +665,28 @@ class ModelPipeline:
             X_tr_processed_core = preprocess_numerics_and_bools_core(X_tr_raw)
 
             # Identify numerical and categorical columns for this fold (after core preprocessing)
-            fold_current_object_cols = X_tr_processed_core.select_dtypes(include='object').columns.tolist()
-            fold_current_numeric_cols = X_tr_processed_core.select_dtypes(include=['number']).columns.tolist()
+            fold_current_object_cols = X_tr_processed_core.select_dtypes(
+                include="object"
+            ).columns.tolist()
+            fold_current_numeric_cols = X_tr_processed_core.select_dtypes(
+                include=["number"]
+            ).columns.tolist()
 
             # Fit and transform categorical data for this fold
-            X_tr_categorical_transformed = fold_category_manager.fit_transform(X_tr_processed_core, fold_current_object_cols)
+            X_tr_categorical_transformed = fold_category_manager.fit_transform(
+                X_tr_processed_core, fold_current_object_cols
+            )
 
             # Fit and transform numerical data for this fold
-            X_tr_final = fold_numerical_imputer.fit_transform(X_tr_categorical_transformed, fold_current_numeric_cols)
+            X_tr_final = fold_numerical_imputer.fit_transform(
+                X_tr_categorical_transformed, fold_current_numeric_cols
+            )
 
             # Apply same preprocessing to test data for this fold, using fitted managers
             X_te_processed_core = preprocess_numerics_and_bools_core(X_te_raw)
-            X_te_categorical_transformed = fold_category_manager.transform(X_te_processed_core)
+            X_te_categorical_transformed = fold_category_manager.transform(
+                X_te_processed_core
+            )
             X_te_final = fold_numerical_imputer.transform(X_te_categorical_transformed)
 
             # Ensure columns are consistent for the fold (if any reordering/missing in test set)
@@ -594,15 +695,22 @@ class ModelPipeline:
                 # Realign columns of test set to match training set, filling missing with 0
                 missing_in_test = set(fold_feature_columns) - set(X_te_final.columns)
                 for col in missing_in_test:
-                    X_te_final[col] = 0 # Fill with 0 or a sensible default
-                X_te_final = X_te_final[fold_feature_columns] # Reorder and drop extra cols
+                    X_te_final[col] = 0  # Fill with 0 or a sensible default
+                X_te_final = X_te_final[
+                    fold_feature_columns
+                ]  # Reorder and drop extra cols
 
             # Build a fresh pipeline for each fold to ensure independent training
-            fold_model = self._get_model(self.model_type) # Get a fresh model instance
-            fold_pipeline = Pipeline([
-                ('identity', IdentityTransformer()), # Use the nested IdentityTransformer
-                ('classifier', fold_model)
-            ])
+            fold_model = self._get_model(self.model_type)  # Get a fresh model instance
+            fold_pipeline = Pipeline(
+                [
+                    (
+                        "identity",
+                        IdentityTransformer(),
+                    ),  # Use the nested IdentityTransformer
+                    ("classifier", fold_model),
+                ]
+            )
 
             # Train the fold's pipeline
             fold_pipeline.fit(X_tr_final, y_tr)
@@ -614,12 +722,14 @@ class ModelPipeline:
             scores.append(auc)
 
         self.cv_scores = np.array(scores)
-        print(f"\nCross-validation complete. Mean AUC: {self.cv_scores.mean():.4f} +/- {self.cv_scores.std():.4f}")
+        print(
+            f"\nCross-validation complete. Mean AUC: {self.cv_scores.mean():.4f} +/- {self.cv_scores.std():.4f}"
+        )
         # Restore the pipeline's main preprocessors and model after CV
         self.category_manager = original_category_manager
         self.numerical_imputer = original_numerical_imputer
         self.model = original_model
-        self.build_pipeline() # Rebuild the main pipeline with the original model
+        self.build_pipeline()  # Rebuild the main pipeline with the original model
         return self.cv_scores
 
     def get_feature_importance(self, X: pd.DataFrame, y: pd.Series):
@@ -634,23 +744,26 @@ class ModelPipeline:
         clf = self.pipeline.named_steps["classifier"]
         if hasattr(clf, "feature_importances_"):
             print("  Using native feature importances.")
-            return pd.DataFrame({
-                "feature": X.columns,
-                "importance": clf.feature_importances_
-            }).sort_values(by="importance", ascending=False)
+            return pd.DataFrame(
+                {"feature": X.columns, "importance": clf.feature_importances_}
+            ).sort_values(by="importance", ascending=False)
         else:
-            print("  Using permutation importance (can be computationally intensive)...")
+            print(
+                "  Using permutation importance (can be computationally intensive)..."
+            )
             # For permutation importance, ensure the X passed is fully preprocessed
             # and matches the expected features after all transformations.
             perm = permutation_importance(
-                self.pipeline, X, y, n_repeats=5,
+                self.pipeline,
+                X,
+                y,
+                n_repeats=5,
                 random_state=self.random_state,
-                n_jobs=-1 # Use all available cores
+                n_jobs=-1,  # Use all available cores
             )
-            return pd.DataFrame({
-                "feature": X.columns,
-                "importance": perm.importances_mean
-            }).sort_values(by="importance", ascending=False)
+            return pd.DataFrame(
+                {"feature": X.columns, "importance": perm.importances_mean}
+            ).sort_values(by="importance", ascending=False)
 
     def get_model(self):
         """
