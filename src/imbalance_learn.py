@@ -1,6 +1,5 @@
 import numpy as np
 from collections import Counter
-from sklearn.utils import _check_X_y
 
 # Import imblearn over-sampling algorithms
 from imblearn.over_sampling import RandomOverSampler
@@ -139,9 +138,6 @@ class ImbalancedSampler:
         """
         if self._sampler is None:
             raise RuntimeError("Sampler not initialized. Call __init__ first.")
-
-        # Ensure X and y are properly formatted (e.g., numpy arrays)
-        X, y = _check_X_y(X, y)
 
         print(f"Original dataset shape: {Counter(y)}")
         try:

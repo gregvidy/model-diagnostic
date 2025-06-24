@@ -4,6 +4,7 @@ import gc
 import pickle
 import xgboost as xgb
 import lightgbm as lgb
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import (
     accuracy_score,
@@ -29,6 +30,7 @@ class CategoryManager:
 
     def __init__(self):
         self.category_map = {}  # Stores {column_name: pandas.CategoricalIndex}
+        self.cat_columns_FE = [] # Stores list of columns that applied FrequencyEncode
 
     def fit(self, X: pd.DataFrame, categorical_columns: list):
         """
@@ -54,7 +56,7 @@ class CategoryManager:
         print("CategoryManager fitting complete.")
         return self
 
-    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+    def transform(self, X: pd.DataFrame, is_apply_one_hot: bool) -> pd.DataFrame:
         """
         Transforms categorical columns in the DataFrame to numerical codes
         based on the fitted categories. Unseen categories are mapped to the
@@ -88,18 +90,24 @@ class CategoryManager:
             )  # Fill with '__missing__' before getting codes
 
             # Convert categories to numerical codes
-            X_transformed[col] = X_transformed[col].cat.codes
-            print(f"  Transformed column '{col}' to numerical codes.")
+            if not is_apply_one_hot:
+                print(f"  Transformed column '{col}' to numerical codes.")
+                X_transformed[col] = X_transformed[col].cat.codes
         print("CategoryManager transformation complete.")
-        return X_transformed
+        return X_transformed        
 
-    def fit_transform(self, X: pd.DataFrame, categorical_columns: list) -> pd.DataFrame:
+    def fit_transform(
+        self,
+        X: pd.DataFrame,
+        is_apply_one_hot: bool,
+        categorical_columns: list
+    ) -> pd.DataFrame:
         """
         Fits the CategoryManager and then transforms the data.
         Convenience method for training phase.
         """
         self.fit(X, categorical_columns)
-        return self.transform(X)
+        return self.transform(X, is_apply_one_hot)
 
     def save(self, filepath: str):
         """Saves the learned category map to a file using pickle."""
@@ -114,6 +122,32 @@ class CategoryManager:
         with open(filepath, "rb") as f:
             self.category_map = pickle.load(f)
         print("Load complete.")
+    
+    def fit_frequency_encode(self, df: pd.DataFrame):
+        """
+        Fit frequency encoding for high-cardinality categorical features.
+        """
+        self.cat_columns_FE = df.select_dtypes(include="int8").columns.tolist()
+
+        # store frequency maps for each column
+        self.freq_maps = {}
+        
+        for col in self.cat_columns_FE:
+            freq = df[col].value_counts()
+            self.freq_maps[col] = freq
+
+    def transform_frequency_encode(self, df: pd.DataFrame):
+        """
+        Apply frequency encoding using learned frequency maps
+        """
+        df_transformed = df.copy()
+
+        for col in self.cat_columns_FE:
+            freq = self.freq_maps[col]
+            df_transformed[col + "_FE"] = df_transformed[col].map(freq)
+
+        df_transformed = df_transformed.drop(self.cat_columns_FE, axis=1)
+        return df_transformed
 
 
 # --- NumericalImputer Class ---
@@ -127,7 +161,7 @@ class NumericalImputer:
     def __init__(self):
         self.imputation_values = {}  # Stores {column_name: median_value}
 
-    def fit(self, X: pd.DataFrame, numerical_columns: list):
+    def fit(self, X: pd.DataFrame, is_impute_median: bool, numerical_columns: list):
         """
         Fits the NumericalImputer by learning median values for specified columns.
         """
@@ -141,16 +175,19 @@ class NumericalImputer:
                 continue
             # Replace infinities with NaN first, then calculate median
             X_copy[col] = X_copy[col].replace([np.inf, -np.inf], np.nan)
-            median_val = X_copy[col].median()
-            if pd.isna(median_val):
-                # Fallback to 0 if all values are NaN in training data
-                self.imputation_values[col] = 0
-                print(
-                    f"  Warning: All values in numerical column '{col}' are NaN. Imputing with 0."
-                )
+            if is_impute_median:
+                median_val = X_copy[col].median()
+                if pd.isna(median_val):
+                    # Fallback to 0 if all values are NaN in training data
+                    self.imputation_values[col] = 0
+                    print(
+                        f"  Warning: All values in numerical column '{col}' are NaN. Imputing with 0."
+                    )
+                else:
+                    self.imputation_values[col] = median_val
+                    print(f"  Fitted median for column '{col}': {median_val}")
             else:
-                self.imputation_values[col] = median_val
-                print(f"  Fitted median for column '{col}': {median_val}")
+                self.imputation_values[col] = 0
         print("NumericalImputer fitting complete.")
         return self
 
@@ -174,12 +211,12 @@ class NumericalImputer:
         print("NumericalImputer transformation complete.")
         return X_transformed
 
-    def fit_transform(self, X: pd.DataFrame, numerical_columns: list) -> pd.DataFrame:
+    def fit_transform(self, X: pd.DataFrame, is_impute_median: bool, numerical_columns: list) -> pd.DataFrame:
         """
         Fits the NumericalImputer and then transforms the data.
         Convenience method for training phase.
         """
-        self.fit(X, numerical_columns)
+        self.fit(X, is_impute_median, numerical_columns)
         return self.transform(X)
 
     def save(self, filepath: str):
@@ -198,7 +235,31 @@ class NumericalImputer:
 
 
 # --- Core Preprocessing Functions ---
-def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
+def standardize_object_cols(val):
+    if pd.isna(val):
+        return val
+    try:
+        return str(int(val))
+    except ValueError:
+        return val
+
+
+def safe_decode(val):
+    if isinstance(val, bytes):
+        try:
+            return val.decode('utf-8')
+        except UnicodeDecodeError:
+            try:
+                return val.decode('latin-1')
+            except:
+                return val.decode('utf-8', errors='ignore')
+    return val
+
+    
+def preprocess_numerics_and_bools_core(
+    df: pd.DataFrame,
+    is_apply_log=False
+) -> pd.DataFrame:
     """
     Performs core numeric and boolean preprocessing:
     - Downcasts float columns.
@@ -210,19 +271,26 @@ def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
     df_processed = df.copy()
 
     # Downcast float columns for memory efficiency
-    float_cols = df_processed.select_dtypes(include=["float32", "float64"]).columns
-    print(f"  Float columns to downcast: {list(float_cols)}")
-    for col in float_cols:
-        try:
-            df_processed[col] = pd.to_numeric(df_processed[col], downcast="float")
-            print(f"  Downcasted column: {col}")
-        except Exception as e:
-            print(f"  Error downcasting column {col}: {e}. Keeping as float64.")
-            df_processed[col] = df_processed[col].astype("float64")
+    if is_apply_log:
+        float_cols = df_processed.select_dtypes(include=["float32", "float64"]).columns
+        print(f"  Float columns to downcast: {list(float_cols)}")
+        for col in float_cols:
+            try:
+                df_processed[col] = df_processed[col].astype("float32")
+                print(f"  Downcasted column: {col}")
+            except Exception as e:
+                print(f"  Error downcasting column {col}: {e}. Keeping as float64.")
+                df_processed[col] = df_processed[col].astype("float64")
 
+    # special case: standardised Object cols
+    for col in df_processed.select_dtypes(include=["string","object"]).columns:
+        df_processed[col] = df_processed[col].apply(standardize_object_cols)
+        df_processed[col] = df_processed[col].apply(safe_decode)
+        df_processed[col] = df_processed[col].str.upper()
+        
     # Handle 'Y'/'N' mappings for object columns and 'Is*' columns
     for col in df_processed.columns:
-        if df_processed[col].dtype == "object":
+        if df_processed[col].dtype in ["object", "string"]:
             df_processed[col] = df_processed[col].replace(r"^\s*$", np.nan, regex=True)
             unique_vals = df_processed[col].dropna().unique()
             if set(unique_vals).issubset({"Y", "N"}):
@@ -233,7 +301,7 @@ def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
             "int64",
             "bool",
         ]:
-            if df_processed[col].dtype == "object" and set(
+            if df_processed[col].dtype in ["object", "string"] and set(
                 df_processed[col].dropna().unique()
             ).issubset({"Y", "N"}):
                 print(f"  Mapping Is* column Y/N to 1/0: {col}")
@@ -245,20 +313,21 @@ def preprocess_numerics_and_bools_core(df: pd.DataFrame) -> pd.DataFrame:
                 except Exception as e:
                     print(
                         f"  Could not convert Is* column '{col}' to int8: {e}. Keeping current dtype."
-                    )
-
+                    )    
+    
     # Apply log10 transform to 'amount'/'limit' related float columns
-    current_float_cols = df_processed.select_dtypes(
-        include=["float32", "float64"]
-    ).columns
-    for col in current_float_cols:
-        if any(k in col.lower() for k in ["amt", "amount", "limit"]):
-            print(f"  Applying log10 transform to column: {col}")
-            vals = df_processed[col]
-            df_processed[col] = np.log10(
-                vals.fillna(0) + 1
-            )  # Fill NaN with 0 before log transform
-            print(f"  Log10 transformed column: {col}")
+    if is_apply_log:
+        current_float_cols = df_processed.select_dtypes(
+            include=["float32", "float64"]
+        ).columns
+        for col in current_float_cols:
+            if any(k in col.lower() for k in ["amt", "amount", "limit"]):
+                print(f"  Applying log10 transform to column: {col}")
+                vals = df_processed[col]
+                df_processed[col] = np.log10(
+                    vals.fillna(0) + 1
+                )  # Fill NaN with 0 before log transform
+                print(f"  Log10 transformed column: {col}")
 
     print("Core numeric and boolean preprocessing complete.")
     return df_processed
@@ -282,7 +351,16 @@ class IdentityTransformer(BaseEstimator, TransformerMixin):
 # --- ModelPipeline Class ---
 class ModelPipeline:
     def _init_lightgbm(self):
-        print("Initializing LightGBM model...")
+        return lgb.LGBMClassifier(
+            n_estimators=1000,
+            # class_weight="balanced",
+            random_state=self.random_state,
+            n_jobs=-1,  # Use all available cores
+            objective="binary",  # For binary classification
+            metric="auc",  # Evaluation metric
+        )
+        
+    def _init_lightgbm_balanced(self):
         return lgb.LGBMClassifier(
             n_estimators=1000,
             class_weight="balanced",
@@ -290,6 +368,16 @@ class ModelPipeline:
             n_jobs=-1,  # Use all available cores
             objective="binary",  # For binary classification
             metric="auc",  # Evaluation metric
+        )
+
+    def _init_random_forest(self):
+        return RandomForestClassifier(
+            n_estimators=1000,
+            max_depth=15,
+            min_samples_leaf=20,
+            class_weight="balanced_subsample",
+            random_state=self.random_state,
+            n_jobs=-1
         )
 
     def __init__(self, model_type="xgboost", random_state=42):
@@ -312,12 +400,15 @@ class ModelPipeline:
         models = {
             "xgboost": xgb.XGBClassifier(
                 n_estimators=1000,
+                scale_pos_weight=300,
                 use_label_encoder=False,  # Deprecated in new XGBoost versions, good to set.
                 eval_metric="logloss",  # Or 'auc' for binary classification
                 random_state=self.random_state,
                 n_jobs=-1,  # Use all available cores
             ),
             "lightgbm": self._init_lightgbm(),
+            "lightgbm_balanced": self._init_lightgbm_balanced(),
+            "random_forest": self._init_random_forest()
         }
         if model_type not in models:
             raise ValueError(f"Unsupported model_type: {model_type}")
@@ -328,6 +419,9 @@ class ModelPipeline:
         df: pd.DataFrame,
         target_column: str,
         exclude_columns: list = None,
+        is_apply_one_hot: bool = True,
+        is_apply_log: bool = False,
+        is_impute_median: bool = False,
         is_training: bool = True,
     ):
         """
@@ -357,27 +451,67 @@ class ModelPipeline:
         X_raw = df.drop(columns=columns_to_drop, errors="ignore").copy()
 
         # Apply core preprocessing that doesn't require fitting
-        X_processed_core = preprocess_numerics_and_bools_core(X_raw)
+        X_processed_core = preprocess_numerics_and_bools_core(X_raw, is_apply_log)
 
         # Identify numerical and categorical columns *after* core preprocessing
         # and before CategoryManager and NumericalImputer
         current_object_cols = X_processed_core.select_dtypes(
-            include="object"
+            include=["object", "string"]
         ).columns.tolist()
         current_numeric_cols = X_processed_core.select_dtypes(
             include=["number"]
         ).columns.tolist()
 
         # Step 2: Handle categorical columns with CategoryManager
-        if is_training:
-            if not current_object_cols:
-                print("No object columns found for CategoryManager to fit_transform.")
+        if self.model_type == 'random_forest':
+            if not is_apply_one_hot:
+                if is_training:
+                    if not current_object_cols:
+                        print("No object columns found for CategoryManager to fit_transform.")
+                    else:
+                        X_transformed = self.category_manager.fit_transform(
+                            X_processed_core, is_apply_one_hot, current_object_cols
+                        )
+                        print("Fit FrequencyEncode for RandomForest model preprocessing...")
+                        self.category_manager.fit_frequency_encode(X_transformed)
+                        X_transformed = self.category_manager.transform_frequency_encode(X_transformed)
+                else:
+                    X_transformed = self.category_manager.transform(X_processed_core, is_apply_one_hot)
+                    print("Applying FrequencyEncode for RandomForest model preprocessing...")
+                    X_transformed = self.category_manager.transform_frequency_encode(X_transformed)
             else:
-                X_transformed = self.category_manager.fit_transform(
-                    X_processed_core, current_object_cols
+                if is_training:
+                    if not current_object_cols:
+                        print("No object columns found for CategoryManager to fit_transform.")
+                    else:
+                        X_transformed = self.category_manager.fit_transform(
+                            X_processed_core, is_apply_one_hot, current_object_cols
+                        )
+                        one_hot_cols = X_transformed.select_dtypes(include=[
+                        "object","string","category"
+                    ]).columns
+                        print(f"Applying One-Hot Encoders for column: {one_hot_cols}...")
+                        X_transformed = pd.get_dummies(X_transformed, columns=one_hot_cols, drop_first=True)
+                else:
+                    X_transformed = self.category_manager.transform(X_processed_core, is_apply_one_hot)
+                    one_hot_cols = X_transformed.select_dtypes(include=[
+                        "object","string","category"
+                    ]).columns
+                    print(f"Applying One-Hot Encoders for column: {one_hot_cols}...")
+                    X_transformed = pd.get_dummies(X_transformed, columns=one_hot_cols, drop_first=True)
+        else:
+            if is_training:
+                if not current_object_cols:
+                    print("No object columns found for CategoryManager to fit_transform.")
+                else:
+                    X_transformed = self.category_manager.fit_transform(
+                        X_processed_core, is_apply_one_hot=False, categorical_columns=current_object_cols
+                    )
+            else:
+                X_transformed = self.category_manager.transform(
+                    X_processed_core,
+                    is_apply_one_hot=False
                 )
-        else:  # is_training is False, so transform mode
-            X_transformed = self.category_manager.transform(X_processed_core)
 
         # After category manager, some object columns are now numerical (int codes)
         # Update column lists. The categorical_columns will now refer to the columns
@@ -397,7 +531,7 @@ class ModelPipeline:
         # Step 3: Handle numerical columns with NumericalImputer
         if is_training:
             X_final = self.numerical_imputer.fit_transform(
-                X_transformed, self.numerical_columns
+                X_transformed, is_impute_median, self.numerical_columns
             )
         else:
             X_final = self.numerical_imputer.transform(X_transformed)
@@ -419,17 +553,11 @@ class ModelPipeline:
             X, y, test_size=test_size, stratify=y, random_state=self.random_state
         )
         print("Data splitting complete.")
-        return {
-            "X_train": X_train,
-            "X_test": X_test,
-            "y_train": y_train,
-            "y_test": y_test,
-        }
+        return X_train, X_test, y_train, y_test
 
     def split_data_by_date(
         self,
-        X: pd.DataFrame,
-        y: pd.Series,
+        df: pd.DataFrame,
         date_column: str,
         split_date: str,
     ):
@@ -440,9 +568,9 @@ class ModelPipeline:
         """
         print("Splitting data by date (pre-preprocessing)...")
         # Ensure date_column is datetime type for comparison
-        if not pd.api.types.is_datetime64_any_dtype(X[date_column]):
+        if not pd.api.types.is_datetime64_any_dtype(df[date_column]):
             try:
-                X[date_column] = pd.to_datetime(X[date_column])
+                df[date_column] = pd.to_datetime(df[date_column])
                 print(f"  Converted '{date_column}' to datetime type.")
             except Exception as e:
                 raise TypeError(
@@ -457,20 +585,16 @@ class ModelPipeline:
                 f"Invalid split_date format: {e}. Please provide a valid date string."
             )
 
-        X_train = X[X[date_column] < split_date].copy()
-        X_test = X[X[date_column] >= split_date].copy()
-        y_train = y.loc[X_train.index].copy()
-        y_test = y.loc[X_test.index].copy()
+        df_train = df[df[date_column] < split_date].copy()
+        df_test = df[df[date_column] >= split_date].copy()
 
-        print(f"Train samples: {len(X_train)}, Test samples: {len(X_test)}")
+        print(f"Train samples: {len(df_train)}, Test samples: {len(df_test)}")
 
         # Return raw DFs for split, so prepare_data can be called on each
         print("Data splitting complete.")
         return {
-            "X_train": X_train,
-            "X_test": X_test,
-            "y_train": y_train,
-            "y_test": y_test,
+            "df_train": df_train,
+            "df_test": df_test,
         }
 
     def build_pipeline(self):
