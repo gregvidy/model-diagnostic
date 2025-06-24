@@ -1,3 +1,5 @@
+DECLARE @sampling_percentage FLOAT = {sampling_pct};
+
 WITH tsf_debit AS (
     SELECT
     	tsf.Transaction_Serial_No
@@ -51,30 +53,33 @@ WITH tsf_debit AS (
         ON c10.[Transaction_Serial_No] = tsf_debit.Transaction_Serial_No
 )
 
-, t_list_card_enter_alert AS (
+, t_list_card_ever_alert AS (
     SELECT DISTINCT Debit_No
     FROM t_base
     WHERE Confirmed = 1 OR Confirmed = 0
 )
 
-, t_population_ever_alert AS (
-	SELECT
-		Debit_No
-        , [Transaction Serial No]
-		, [Transaction Datetime]
-		, [Transaction Amount]
-		, MCC
-		, [Country Code]
-		, [Card Acceptor Terminal ID]
-        , [Card Acceptor Name]
-        , [Card Acceptor City]
-        , [Card Acceptor Region]
-        , [Card Acceptor Country Code]
-		, [Currency Code]
-		, Confirmed
-	FROM t_base
-	WHERE Confirmed = 1 OR Confirmed = 0
-    UNION ALL
+, t_list_card_never_alert AS (
+    SELECT DISTINCT t_base.Debit_No
+    FROM t_base
+    LEFT JOIN t_list_card_ever_alert
+        ON t_base.Debit_No = t_list_card_ever_alert.Debit_No
+    WHERE t_list_card_ever_alert.Debit_No IS NULL
+)
+
+, t_sample AS (
+    SELECT Debit_No
+    FROM (
+        SELECT
+            Debit_No
+            , ROW_NUMBER() OVER (ORDER BY NEWID()) AS rn
+            , COUNT(*) OVER () AS total
+        FROM t_list_card_never_alert
+    ) AS sub
+    WHERE rn <= total * @sampling_percentage
+)
+
+, t_all_clean_population AS (
     SELECT
 		t_base.Debit_No
         , [Transaction Serial No]
@@ -90,19 +95,9 @@ WITH tsf_debit AS (
 		, [Currency Code]
 		, Confirmed
     FROM t_base
-    INNER JOIN t_list_card_enter_alert
-        ON t_base.Debit_No = t_list_card_enter_alert.Debit_No
-    WHERE Confirmed IS NULL
+    INNER JOIN t_sample
+        ON t_base.Debit_No = t_sample.Debit_No
 )
-
-/*
-    Total transactions from t_population_ever_alert CTE table is ~380K transactions
-    with Confirmed = 1 proportion only ~0.12% or 488 transactions.
-
-    That sample is enough since it already covers the historical clean transactions
-    and fraud transactions under same Debit_Account_No. Majority of the transactions under
-    C06 and C10 tables are also clean/never went into fraud alert.
-*/
 
 SELECT
     t_final.Debit_No
@@ -250,6 +245,6 @@ SELECT
 	, tscf.IsBucket2BlacklistMerchant
 	, tscf.CountTrxEOD
 	, t_final.Confirmed
-FROM t_population_ever_alert AS t_final
+FROM t_all_clean_population AS t_final
 LEFT JOIN Transaction_Summary_Calculations_Fraud_Hashed tscf
 	ON t_final.[Transaction Serial No] = tscf.Transaction_Serial_No
