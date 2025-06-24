@@ -96,3 +96,8 @@ prof/
 
 # Node modules (if using JS somewhere)
 node_modules/
+
+# dataset
+*.csv
+*.parquet
+*.zip
