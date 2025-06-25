@@ -437,77 +437,130 @@ def calculate_unique_count(
 def calculate_time_differences(
     df: pd.DataFrame,
     datetime_col: str,
-    groupby_col: str,
-    time_window: List[str],
     config: Dict[str, List[str]],
+    time_windows: List[str]
 ) -> pd.DataFrame:
     """
-    Calculate time differences between transactions.
-    
+    Calculate time differences and rolling averages between transactions.
+
     Parameters:
     - df: pd.DataFrame
     - datetime_col: str
-    - groupby_col: str
-    - time_window: List[str]
-    - config: Dict[str, List[str]]
-    
-    Returns:
-    - pd.DataFrame with time differences and rolling averages
-    """
-    df[datetime_col] = pd.to_datetime(df[datetime_col])
-    df = df.sort_values(by=[groupby_col, datetime_col])
+    - config: Dict[str, List[str]] - mapping of new column names to groupby columns
+    - time_windows: List[str] - list of rolling window sizes (e.g., '15T', '1H', '1D')
 
-    # process each config item
-    for new_col, groupby_cols in tqdm(
-        config.items(), desc="Processing time diffs"
-    ):
-        df = df.sort_values(by=groupby_cols + [datetime_col])
+    Returns:
+    - pd.DataFrame with time difference columns and their rolling averages
+    """
+    df = df.copy()
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+
+    result = pd.DataFrame(index=df.index)
+
+    for new_col, groupby_cols in config.items():
+        df_sorted = df.sort_values(by=groupby_cols + [datetime_col])
 
         if len(groupby_cols) == 1:
-            # Simple time difference
-            df[new_col] = (
-                df.groupby(groupby_cols)[datetime_col]
+            result[new_col] = (
+                df_sorted.groupby(groupby_cols)[datetime_col]
                 .diff()
                 .dt.total_seconds() / 60
             )
         else:
-            # Conditional time difference: only when the last column changes
             primary_group = groupby_cols[0]
             change_col = groupby_cols[-1]
 
-            # compute shifted previous time and value
-            prev_time = df.groupby(primary_group)[datetime_col].shift(1)
-            prev_val = df.groupby(primary_group)[change_col].shift(1)
-            changed = df[change_col] != prev_val
+            prev_time = df_sorted.groupby(primary_group)[datetime_col].shift(1)
+            prev_val = df_sorted.groupby(primary_group)[change_col].shift(1)
+            changed = df_sorted[change_col] != prev_val
 
-            # compute time diff where change occured
             time_diff = (
-                (df[datetime_col] - prev_time)
+                (df_sorted[datetime_col] - prev_time)
                 .dt.total_seconds() / 60
             )
-            df[new_col] = time_diff.where(changed, np.nan)
+            result[new_col] = time_diff.where(changed, np.nan)
 
-    # Rolling averages
-    for window in tqdm(time_window, desc="Calculating rolling averages"):
-        temp_df = df[
-            [datetime_col, groupby_col] + list(config.keys())
-        ].copy()
+    # Merge time_diff columns back to df for rolling calculations
+    df = df.join(result)
 
-        # sort again if needed (minimal slice)
-        temp_df = temp_df.sort_values(
-            by=[groupby_col, datetime_col]
-        ).set_index(datetime_col)
-
+    for window in time_windows:
         for new_col in config.keys():
             rolled = (
-                temp_df.groupby(groupby_col)[new_col]
+                df.sort_values(by=[config[new_col][0], datetime_col])
+                .set_index(datetime_col)
+                .groupby(config[new_col][0])[new_col]
                 .rolling(window=window)
                 .mean()
                 .reset_index(level=0, drop=True)
             )
-            df[f"avg_{new_col}_L{window}"] = rolled.values
+            result[f"avg_{new_col}_L{window}"] = rolled.sort_index().values
+    return result
 
-    return df
+
+def calculate_duration_since_first_trnx(
+    dataset: pd.DataFrame,
+    groupby: str,
+    groupby_col: str,
+    window: str,
+    key: str,
+    out_col: str,
+    datetime_col: str,
+    agg_func: str = "mean",
+    na_value: float = 0.0
+) -> pd.DataFrame:
+    """
+    Calculate duration in minutes between the first transaction and each subsequent transaction
+    for each group defined in the config.
+
+    Parameters:
+    - df: pd.DataFrame
+    - datetime_col: str - name of the datetime column
+    - config: Dict - configuration with keys:
+        - groupby: primary grouping column (e.g., PANNumber)
+        - groupby_col: target column (e.g., MCC)
+        - windows: dict of {window: output_column_name}
+
+    Returns:
+    - pd.DataFrame with rolling duration features
+    """
+    df = dataset.copy()
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+    df = df.sort_values(by=[groupby, datetime_col])
+
+    # Get first transaction time per target group within each primary group
+    df[f"first_txn_time_by_{groupby_col}"] = (
+        df.groupby([groupby, groupby_col])[datetime_col]
+        .transform("first")
+    )
+
+    # Calculate duration in minutes
+    amount_col = f"DurationSince_FirstTrnx_to_Current_{groupby_col}"
+    df[amount_col] = (
+        (df[datetime_col] - df[f"first_txn_time_by_{groupby_col}"]).dt.total_seconds()/60
+    )
+
+    if agg_func not in ["mean", "max", "sum"]:
+        raise ValueError("agg_func must be one of: 'mean', 'max', 'sum'")
+
+    # Rolling features
+    df_rolling = df.copy()
+    df_duration_trnx_time = (
+        df_rolling.set_index(datetime_col)
+        .sort_index()
+        .groupby([groupby, groupby_col])[amount_col]
+        .rolling(window, closed="left")
+        .agg(agg_func)
+        .fillna(na_value)
+        .reset_index()
+    )
+
+    df_duration_trnx_time = df_duration_trnx_time.rename(columns={amount_col: out_col})
+    df_duration_trnx_time = df_duration_trnx_time.drop_duplicates(
+        subset=[groupby, datetime_col], keep="last"
+    )
+    dataset_TJ = df[[key, groupby, datetime_col, amount_col]].copy()
+    join_data = dataset_TJ.merge(df_duration_trnx_time, how="left", on=[groupby, datetime_col])
+    return join_data[[key, groupby, datetime_col, amount_col, out_col]]
 
 
 # Generate rolling features Pandas:
@@ -577,13 +630,24 @@ def generate_rolling_features(
                     out_col=out_col,
                     agg_func=agg_func,
                 )
+            elif feature_type == "first_trnx_duration":
+                feature_df = calculate_duration_since_first_trnx(
+                    dataset=df,
+                    groupby=groupby,
+                    groupby_col=groupby_col,
+                    window=window,
+                    key=key_col,
+                    out_col=out_col,
+                    datetime_col=datetime_col,
+                    na_value=na_value
+                )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
 
             all_feature_dfs.append((feature_df, [key_col, groupby, datetime_col]))
 
     # Merge all features with original df using appropriate keys
-    df_merged = df
+    df_merged = df.copy()
     for feat_df, merge_keys in all_feature_dfs:
         df_merged = pd.merge(
             df_merged,
