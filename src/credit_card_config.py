@@ -168,6 +168,26 @@ freq_config = [
     },
 ]
 
+freq_config_pos_mode = [
+    {
+        # Transaction Count grouped by PANNumber and POSMode
+        "type": "frequency",
+        "groupby": "PANNumber",
+        "amount_col": "Transaction Serial No",
+        "groupby_type": "Yes",
+        "groupby_col": "POS Entry Mode",
+        "windows": {
+            "900S": "TxnCount_to_POSMode_L15M",
+            "1H": "TxnCount_to_POSMode_L1H",
+            "1D": "TxnCount_to_POSMode_L1D",
+            "7D": "TxnCount_to_POSMode_L7D",
+            "14D": "TxnCount_to_POSMode_L14D",
+            "30D": "TxnCount_to_POSMode_L30D",
+            "90D": "TxnCount_to_POSMode_L90D",
+        },
+    },
+]
+
 
 ################
 ### MONETARY ###
@@ -514,6 +534,63 @@ monetary_config_6 = [
     },
 ]
 
+monetary_config_pos_mode = [
+    {
+        # Average Transaction Amount to POSMode grouped by PANNumber
+        "type": "monetary",
+        "groupby": "PANNumber",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "POS Entry Mode",
+        "agg_func": "mean",
+        "windows": {
+            "900S": "Avg_Amt_to_POSMode_L15M",
+            "1H": "Avg_Amt_to_POSMode_L1H",
+            "1D": "Avg_Amt_to_POSMode_L1D",
+            "7D": "Avg_Amt_to_POSMode_L7D",
+            "14D": "Avg_Amt_to_POSMode_L14D",
+            "30D": "Avg_Amt_to_POSMode_L30D",
+            "90D": "Avg_Amt_to_POSMode_L90D",
+        },
+    },
+    {
+        # Maximum Transaction Amount to POSMode grouped by PANNumber
+        "type": "monetary",
+        "groupby": "PANNumber",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "POS Entry Mode",
+        "agg_func": "max",
+        "windows": {
+            "900S": "Max_Amt_to_POSMode_L15M",
+            "1H": "Max_Amt_to_POSMode_L1H",
+            "1D": "Max_Amt_to_POSMode_L1D",
+            "7D": "Max_Amt_to_POSMode_L7D",
+            "14D": "Max_Amt_to_POSMode_L14D",
+            "30D": "Max_Amt_to_POSMode_L30D",
+            "90D": "Max_Amt_to_POSMode_L90D",
+        },
+    },
+    {
+        # Sum Transaction Amount to POSMode grouped by PANNumber
+        "type": "monetary",
+        "groupby": "PANNumber",
+        "amount_col": "Transaction Amount",
+        "groupby_type": "Yes",
+        "groupby_col": "POS Entry Mode",
+        "agg_func": "sum",
+        "windows": {
+            "900S": "Sum_Amt_to_POSMode_L15M",
+            "1H": "Sum_Amt_to_POSMode_L1H",
+            "1D": "Sum_Amt_to_POSMode_L1D",
+            "7D": "Sum_Amt_to_POSMode_L7D",
+            "14D": "Sum_Amt_to_POSMode_L14D",
+            "30D": "Sum_Amt_to_POSMode_L30D",
+            "90D": "Sum_Amt_to_POSMode_L90D",
+        },
+    },
+]
+
 
 ####################
 ### UNIQUE COUNT ###
@@ -592,6 +669,45 @@ unique_count_config = [
             "14D": "CntUnique_CardNo_by_cardAcceptor_country_L14D",
             "30D": "CntUnique_CardNo_by_cardAcceptor_country_L30D",
             "90D": "CntUnique_CardNo_by_cardAcceptor_country_L90D",
+        },
+    },
+]
+
+
+################################
+### FIRST TIME TRNX DURATION ###
+################################
+first_time_trnx_duration_config = [
+    {
+        # Average unique (distinct) MCC grouped by PANNumber
+        "type": "first_trnx_duration",
+        "groupby": "PANNumber",
+        "groupby_col": "MCC",
+        "agg_func": "mean",
+        "windows": {
+            "900S": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L15M",
+            "1H": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L1H",
+            "1D": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L1D",
+            "7D": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L7D",
+            "14D": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L14D",
+            "30D": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L30D",
+            "90D": "Avg_DurationSince_FirstTrnx_to_Current_MCC_L90D",
+        },
+    },
+    {
+        # Count unique (distinct) Card_no/PANNumber grouped by MCC
+        "type": "first_trnx_duration",
+        "groupby": "PANNumber",
+        "groupby_col": "CountryCode",
+        "agg_func": "mean",
+        "windows": {
+            "900S": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L15M",
+            "1H": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L1H",
+            "1D": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L1D",
+            "7D": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L7D",
+            "14D": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L14D",
+            "30D": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L30D",
+            "90D": "Avg_DurationSince_FirstTrnx_to_Current_CountryCode_L90D",
         },
     },
 ]
