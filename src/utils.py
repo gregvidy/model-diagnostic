@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def remove_highly_correlated_features(df, threshold, numerical_cols, method="pearson"):
+def remove_highly_correlated_features(df, threshold, numerical_cols, method="pearson", verbose=True):
     """
     Remove features that are highly correlated with each other
     """
