@@ -13,3 +13,5 @@ black[jupyter]
 ucimlrepo
 ipykernel
 optbinning
+dask
+pyarrow
