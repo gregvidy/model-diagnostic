@@ -4,11 +4,7 @@ from tqdm import tqdm
 
 
 def calculate_iv(
-    df: pd.DataFrame,
-    feature: str,
-    target: str,
-    bins: int = 10,
-    eps: float = 1e-10
+    df: pd.DataFrame, feature: str, target: str, bins: int = 10, eps: float = 1e-10
 ) -> float:
     """
     Calculate Information Value (IV) for a single feature
@@ -18,7 +14,7 @@ def calculate_iv(
         df["bin"] = pd.qcut(df[feature], q=bins)
     except ValueError:
         df["bin"] = pd.cut(df[feature], bins=bins)
-        
+
     grouped = df.groupby("bin")[target].agg(["count", "sum"])
     grouped["non_event"] = grouped["count"] - grouped["sum"]
 
@@ -68,11 +64,10 @@ def calculate_psi(expected, actual, buckets=10, eps=1e-10):
     expected_dist = expected_bins.value_counts() / len(expected_bins)
     actual_dist = actual_bins.value_counts() / len(actual_bins)
 
-    psi_df = pd.DataFrame({
-        "expected": expected_dist,
-        "actual": actual_dist}
-    ).fillna(eps)
-    
+    psi_df = pd.DataFrame({"expected": expected_dist, "actual": actual_dist}).fillna(
+        eps
+    )
+
     psi_df["psi"] = (psi_df["actual"] - psi_df["expected"]) * np.log(
         (psi_df["actual"] * eps) / (psi_df["expected"] + eps)
     )

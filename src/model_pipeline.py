@@ -30,7 +30,7 @@ class CategoryManager:
 
     def __init__(self):
         self.category_map = {}  # Stores {column_name: pandas.CategoricalIndex}
-        self.cat_columns_FE = [] # Stores list of columns that applied FrequencyEncode
+        self.cat_columns_FE = []  # Stores list of columns that applied FrequencyEncode
 
     def fit(self, X: pd.DataFrame, categorical_columns: list):
         """
@@ -94,13 +94,10 @@ class CategoryManager:
                 print(f"  Transformed column '{col}' to numerical codes.")
                 X_transformed[col] = X_transformed[col].cat.codes
         print("CategoryManager transformation complete.")
-        return X_transformed        
+        return X_transformed
 
     def fit_transform(
-        self,
-        X: pd.DataFrame,
-        is_apply_one_hot: bool,
-        categorical_columns: list
+        self, X: pd.DataFrame, is_apply_one_hot: bool, categorical_columns: list
     ) -> pd.DataFrame:
         """
         Fits the CategoryManager and then transforms the data.
@@ -122,7 +119,7 @@ class CategoryManager:
         with open(filepath, "rb") as f:
             self.category_map = pickle.load(f)
         print("Load complete.")
-    
+
     def fit_frequency_encode(self, df: pd.DataFrame):
         """
         Fit frequency encoding for high-cardinality categorical features.
@@ -131,7 +128,7 @@ class CategoryManager:
 
         # store frequency maps for each column
         self.freq_maps = {}
-        
+
         for col in self.cat_columns_FE:
             freq = df[col].value_counts()
             self.freq_maps[col] = freq
@@ -211,7 +208,9 @@ class NumericalImputer:
         print("NumericalImputer transformation complete.")
         return X_transformed
 
-    def fit_transform(self, X: pd.DataFrame, is_impute_median: bool, numerical_columns: list) -> pd.DataFrame:
+    def fit_transform(
+        self, X: pd.DataFrame, is_impute_median: bool, numerical_columns: list
+    ) -> pd.DataFrame:
         """
         Fits the NumericalImputer and then transforms the data.
         Convenience method for training phase.
@@ -247,18 +246,17 @@ def standardize_object_cols(val):
 def safe_decode(val):
     if isinstance(val, bytes):
         try:
-            return val.decode('utf-8')
+            return val.decode("utf-8")
         except UnicodeDecodeError:
             try:
-                return val.decode('latin-1')
+                return val.decode("latin-1")
             except:
-                return val.decode('utf-8', errors='ignore')
+                return val.decode("utf-8", errors="ignore")
     return val
 
-    
+
 def preprocess_numerics_and_bools_core(
-    df: pd.DataFrame,
-    is_apply_log=False
+    df: pd.DataFrame, is_apply_log=False
 ) -> pd.DataFrame:
     """
     Performs core numeric and boolean preprocessing:
@@ -283,11 +281,11 @@ def preprocess_numerics_and_bools_core(
                 df_processed[col] = df_processed[col].astype("float64")
 
     # special case: standardised Object cols
-    for col in df_processed.select_dtypes(include=["string","object"]).columns:
+    for col in df_processed.select_dtypes(include=["string", "object"]).columns:
         df_processed[col] = df_processed[col].apply(standardize_object_cols)
         df_processed[col] = df_processed[col].apply(safe_decode)
         df_processed[col] = df_processed[col].str.upper()
-        
+
     # Handle 'Y'/'N' mappings for object columns and 'Is*' columns
     for col in df_processed.columns:
         if df_processed[col].dtype in ["object", "string"]:
@@ -313,8 +311,8 @@ def preprocess_numerics_and_bools_core(
                 except Exception as e:
                     print(
                         f"  Could not convert Is* column '{col}' to int8: {e}. Keeping current dtype."
-                    )    
-    
+                    )
+
     # Apply log10 transform to 'amount'/'limit' related float columns
     if is_apply_log:
         current_float_cols = df_processed.select_dtypes(
@@ -359,7 +357,7 @@ class ModelPipeline:
             objective="binary",  # For binary classification
             metric="auc",  # Evaluation metric
         )
-        
+
     def _init_lightgbm_balanced(self):
         return lgb.LGBMClassifier(
             n_estimators=1000,
@@ -377,7 +375,7 @@ class ModelPipeline:
             min_samples_leaf=20,
             class_weight="balanced_subsample",
             random_state=self.random_state,
-            n_jobs=-1
+            n_jobs=-1,
         )
 
     def __init__(self, model_type="xgboost", random_state=42):
@@ -408,7 +406,7 @@ class ModelPipeline:
             ),
             "lightgbm": self._init_lightgbm(),
             "lightgbm_balanced": self._init_lightgbm_balanced(),
-            "random_forest": self._init_random_forest()
+            "random_forest": self._init_random_forest(),
         }
         if model_type not in models:
             raise ValueError(f"Unsupported model_type: {model_type}")
@@ -463,54 +461,81 @@ class ModelPipeline:
         ).columns.tolist()
 
         # Step 2: Handle categorical columns with CategoryManager
-        if self.model_type == 'random_forest':
+        if self.model_type == "random_forest":
             if not is_apply_one_hot:
                 if is_training:
                     if not current_object_cols:
-                        print("No object columns found for CategoryManager to fit_transform.")
+                        print(
+                            "No object columns found for CategoryManager to fit_transform."
+                        )
                     else:
                         X_transformed = self.category_manager.fit_transform(
                             X_processed_core, is_apply_one_hot, current_object_cols
                         )
-                        print("Fit FrequencyEncode for RandomForest model preprocessing...")
+                        print(
+                            "Fit FrequencyEncode for RandomForest model preprocessing..."
+                        )
                         self.category_manager.fit_frequency_encode(X_transformed)
-                        X_transformed = self.category_manager.transform_frequency_encode(X_transformed)
+                        X_transformed = (
+                            self.category_manager.transform_frequency_encode(
+                                X_transformed
+                            )
+                        )
                 else:
-                    X_transformed = self.category_manager.transform(X_processed_core, is_apply_one_hot)
-                    print("Applying FrequencyEncode for RandomForest model preprocessing...")
-                    X_transformed = self.category_manager.transform_frequency_encode(X_transformed)
+                    X_transformed = self.category_manager.transform(
+                        X_processed_core, is_apply_one_hot
+                    )
+                    print(
+                        "Applying FrequencyEncode for RandomForest model preprocessing..."
+                    )
+                    X_transformed = self.category_manager.transform_frequency_encode(
+                        X_transformed
+                    )
             else:
                 if is_training:
                     if not current_object_cols:
-                        print("No object columns found for CategoryManager to fit_transform.")
+                        print(
+                            "No object columns found for CategoryManager to fit_transform."
+                        )
                     else:
                         X_transformed = self.category_manager.fit_transform(
                             X_processed_core, is_apply_one_hot, current_object_cols
                         )
-                        one_hot_cols = X_transformed.select_dtypes(include=[
-                        "object","string","category"
-                    ]).columns
-                        print(f"Applying One-Hot Encoders for column: {one_hot_cols}...")
-                        X_transformed = pd.get_dummies(X_transformed, columns=one_hot_cols, drop_first=True)
+                        one_hot_cols = X_transformed.select_dtypes(
+                            include=["object", "string", "category"]
+                        ).columns
+                        print(
+                            f"Applying One-Hot Encoders for column: {one_hot_cols}..."
+                        )
+                        X_transformed = pd.get_dummies(
+                            X_transformed, columns=one_hot_cols, drop_first=True
+                        )
                 else:
-                    X_transformed = self.category_manager.transform(X_processed_core, is_apply_one_hot)
-                    one_hot_cols = X_transformed.select_dtypes(include=[
-                        "object","string","category"
-                    ]).columns
+                    X_transformed = self.category_manager.transform(
+                        X_processed_core, is_apply_one_hot
+                    )
+                    one_hot_cols = X_transformed.select_dtypes(
+                        include=["object", "string", "category"]
+                    ).columns
                     print(f"Applying One-Hot Encoders for column: {one_hot_cols}...")
-                    X_transformed = pd.get_dummies(X_transformed, columns=one_hot_cols, drop_first=True)
+                    X_transformed = pd.get_dummies(
+                        X_transformed, columns=one_hot_cols, drop_first=True
+                    )
         else:
             if is_training:
                 if not current_object_cols:
-                    print("No object columns found for CategoryManager to fit_transform.")
+                    print(
+                        "No object columns found for CategoryManager to fit_transform."
+                    )
                 else:
                     X_transformed = self.category_manager.fit_transform(
-                        X_processed_core, is_apply_one_hot=False, categorical_columns=current_object_cols
+                        X_processed_core,
+                        is_apply_one_hot=False,
+                        categorical_columns=current_object_cols,
                     )
             else:
                 X_transformed = self.category_manager.transform(
-                    X_processed_core,
-                    is_apply_one_hot=False
+                    X_processed_core, is_apply_one_hot=False
                 )
 
         # After category manager, some object columns are now numerical (int codes)

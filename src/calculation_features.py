@@ -10,29 +10,27 @@ from tqdm import tqdm
 # Utility Function #
 ####################
 
+
 def prepare_dask_dataframe(
     df: dd.DataFrame,
     datetime_col: str,
     partition_size: str = "500MB",
-    target_partitions: int = 50
+    target_partitions: int = 50,
 ) -> dd.DataFrame:
     """
     Prepare dask dataframe: sort index, repartition, compute divisions
     """
     # make sure datetime column is valid
-    df[datetime_col] = dd.to_datetime(df[datetime_col], errors='coerce')
+    df[datetime_col] = dd.to_datetime(df[datetime_col], errors="coerce")
     df = df.dropna(subset=[datetime_col])
 
     # early exit if dataframe becomes empty after cleaning
     if df.shape[0].compute() == 0:
         print("[INFO] Dataframe is empty after datetime cleaning.")
         return df
-        
+
     # compute min/max datetime from whole dataset
-    min_dt, max_dt = dd.compute(
-        df[datetime_col].min(),
-        df[datetime_col].max()
-    )
+    min_dt, max_dt = dd.compute(df[datetime_col].min(), df[datetime_col].max())
 
     # handle edge case if min_dt == max_dt
     if min_dt == max_dt:
@@ -40,12 +38,12 @@ def prepare_dask_dataframe(
         print("[INFO] only single timestamp found. no partitioning needed")
         df = df.set_index(datetime_col, sorted=False, compute_divisions=True)
         return df
-        
+
     # generate pre-compute divisions
     divisions = pd.date_range(
-        start=min_dt, end=max_dt, periods=target_partitions+1
+        start=min_dt, end=max_dt, periods=target_partitions + 1
     ).to_list()
-    
+
     # set index directly with divisions
     df = df.set_index(datetime_col, divisions=divisions, sorted=False)
 
@@ -57,6 +55,7 @@ def prepare_dask_dataframe(
 #####################################
 # Core Frequency Calculation (Dask) #
 #####################################
+
 
 def calculate_frequency_dask(
     dataset: dd.DataFrame,
@@ -74,12 +73,12 @@ def calculate_frequency_dask(
 
     if groupby_type == "No":
         # apply rolling count using map_overlap for time-based rolling
-        meta = {amount_col: 'float64'}
+        meta = {amount_col: "float64"}
         df_num_trnx = dataset.map_overlap(
             lambda df: df[[amount_col]].rolling(window, closed="left").count(),
             before=before_window,
-            after=pd.Timedelta('0D'),
-            meta=meta
+            after=pd.Timedelta("0D"),
+            meta=meta,
         ).fillna(na_value)
 
     else:
@@ -92,24 +91,18 @@ def calculate_frequency_dask(
                 .fillna(na_value)
                 .reset_index(level=0, drop=True)
             )
-            
-        meta = {amount_col: 'float64'}
+
+        meta = {amount_col: "float64"}
         df_num_trnx = dataset.map_overlap(
-            group_rolling,
-            before=before_window,
-            after=pd.Timedelta('0D'),
-            meta=meta
+            group_rolling, before=before_window, after=pd.Timedelta("0D"), meta=meta
         )
-    
+
     # rename output column
     df_num_trnx = df_num_trnx.rename(columns={amount_col: out_col})
 
     # join back original keys
     result = dd.merge(
-        dataset[[key, groupby]],
-        df_num_trnx,
-        left_index=True,
-        right_index=True
+        dataset[[key, groupby]], df_num_trnx, left_index=True, right_index=True
     )
 
     return result
@@ -118,6 +111,7 @@ def calculate_frequency_dask(
 ####################################
 # Core Monetary Calculation (Dask) #
 ####################################
+
 
 def calculate_monetary_dask(
     dataset: dd.DataFrame,
@@ -141,15 +135,18 @@ def calculate_monetary_dask(
 
     if groupby_type == "No":
         # case without additional groupby
-        meta = {amount_col: 'float64'}
+        meta = {amount_col: "float64"}
         df_amt_trnx = dataset.map_overlap(
-            lambda df: getattr(df[[amount_col]].rolling(window, closed="left"), agg_func)(),
+            lambda df: getattr(
+                df[[amount_col]].rolling(window, closed="left"), agg_func
+            )(),
             before=before_window,
-            after=pd.Timedelta('0D'),
-            meta=meta
+            after=pd.Timedelta("0D"),
+            meta=meta,
         ).fillna(na_value)
 
     else:
+
         def group_rolling(df):
             return (
                 df.groupby(groupby_col)
@@ -159,12 +156,9 @@ def calculate_monetary_dask(
                 .reset_index(level=0, drop=True)
             )
 
-        meta = {amount_col: 'float64'}
+        meta = {amount_col: "float64"}
         df_amt_trnx = dataset.map_overlap(
-            group_rolling,
-            before=before_window,
-            after=pd.Timedelta('0D'),
-            meta=meta
+            group_rolling, before=before_window, after=pd.Timedelta("0D"), meta=meta
         )
 
     # rename column
@@ -172,10 +166,7 @@ def calculate_monetary_dask(
 
     # merge back with original column
     result = dd.merge(
-        dataset[[key, groupby]],
-        df_amt_trnx,
-        left_index=True,
-        right_index=True
+        dataset[[key, groupby]], df_amt_trnx, left_index=True, right_index=True
     )
 
     return result
@@ -185,11 +176,9 @@ def calculate_monetary_dask(
 # Rolling Feature Generator (Dask) #
 ####################################
 
+
 def generate_rolling_features_dask(
-    df: dd.DataFrame,
-    datetime_col: str,
-    key_col: str,
-    features_config: List[Dict]
+    df: dd.DataFrame, datetime_col: str, key_col: str, features_config: List[Dict]
 ) -> dd.DataFrame:
 
     # Persist base dataframe once to avoid redundant computation
@@ -225,7 +214,7 @@ def generate_rolling_features_dask(
                 )
             # process monetary feature
             elif feature_type == "monetary":
-                agg_func = config.get("agg_func", "mean") # default mean
+                agg_func = config.get("agg_func", "mean")  # default mean
                 feature_df = calculate_monetary_dask(
                     dataset=df,
                     datetime_col=datetime_col,
@@ -237,7 +226,7 @@ def generate_rolling_features_dask(
                     window=window,
                     na_value=na_value,
                     out_col=out_col,
-                    agg_func=agg_func
+                    agg_func=agg_func,
                 )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
@@ -254,7 +243,7 @@ def generate_rolling_features_dask(
     merge_keys = [key_col, groupby, datetime_col]
 
     for feature_df in feature_dfs:
-        df_final = dd.merge(df_final, feature_df, on=merge_keys, how='left')
+        df_final = dd.merge(df_final, feature_df, on=merge_keys, how="left")
 
     return df_final
 
@@ -416,7 +405,7 @@ def calculate_unique_count(
 
     # initiate result list
     results = []
-    
+
     # Compute rolling unique counts per group
     for key, group in dataset.groupby(groupby):
         group = group.set_index(datetime_col)
@@ -430,7 +419,7 @@ def calculate_unique_count(
 
     # combine back all groups
     result_df = pd.concat(results, axis=0, ignore_index=True)
-    
+
     return result_df
 
 
@@ -438,7 +427,7 @@ def calculate_time_differences(
     df: pd.DataFrame,
     datetime_col: str,
     config: Dict[str, List[str]],
-    time_windows: List[str]
+    time_windows: List[str],
 ) -> pd.DataFrame:
     """
     Calculate time differences and rolling averages between transactions.
@@ -462,9 +451,8 @@ def calculate_time_differences(
 
         if len(groupby_cols) == 1:
             result[new_col] = (
-                df_sorted.groupby(groupby_cols)[datetime_col]
-                .diff()
-                .dt.total_seconds() / 60
+                df_sorted.groupby(groupby_cols)[datetime_col].diff().dt.total_seconds()
+                / 60
             )
         else:
             primary_group = groupby_cols[0]
@@ -474,10 +462,7 @@ def calculate_time_differences(
             prev_val = df_sorted.groupby(primary_group)[change_col].shift(1)
             changed = df_sorted[change_col] != prev_val
 
-            time_diff = (
-                (df_sorted[datetime_col] - prev_time)
-                .dt.total_seconds() / 60
-            )
+            time_diff = (df_sorted[datetime_col] - prev_time).dt.total_seconds() / 60
             result[new_col] = time_diff.where(changed, np.nan)
 
     # Merge time_diff columns back to df for rolling calculations
@@ -506,7 +491,7 @@ def calculate_duration_since_first_trnx(
     out_col: str,
     datetime_col: str,
     agg_func: str = "mean",
-    na_value: float = 0.0
+    na_value: float = 0.0,
 ) -> pd.DataFrame:
     """
     Calculate duration in minutes between the first transaction and each subsequent transaction
@@ -528,16 +513,15 @@ def calculate_duration_since_first_trnx(
     df = df.sort_values(by=[groupby, datetime_col])
 
     # Get first transaction time per target group within each primary group
-    df[f"first_txn_time_by_{groupby_col}"] = (
-        df.groupby([groupby, groupby_col])[datetime_col]
-        .transform("first")
-    )
+    df[f"first_txn_time_by_{groupby_col}"] = df.groupby([groupby, groupby_col])[
+        datetime_col
+    ].transform("first")
 
     # Calculate duration in minutes
     amount_col = f"DurationSince_FirstTrnx_to_Current_{groupby_col}"
     df[amount_col] = (
-        (df[datetime_col] - df[f"first_txn_time_by_{groupby_col}"]).dt.total_seconds()/60
-    )
+        df[datetime_col] - df[f"first_txn_time_by_{groupby_col}"]
+    ).dt.total_seconds() / 60
 
     if agg_func not in ["mean", "max", "sum"]:
         raise ValueError("agg_func must be one of: 'mean', 'max', 'sum'")
@@ -559,8 +543,64 @@ def calculate_duration_since_first_trnx(
         subset=[groupby, datetime_col], keep="last"
     )
     dataset_TJ = df[[key, groupby, datetime_col, amount_col]].copy()
-    join_data = dataset_TJ.merge(df_duration_trnx_time, how="left", on=[groupby, datetime_col])
+    join_data = dataset_TJ.merge(
+        df_duration_trnx_time, how="left", on=[groupby, datetime_col]
+    )
     return join_data[[key, groupby, datetime_col, amount_col, out_col]]
+
+
+def label_risk_level_category(
+    df: pd.DataFrame, datetime_col: str, config: Dict[str, List[str]]
+):
+    """
+    Labels a category as very-high risk, high risk, etc. For example: if their MCC aggregated
+    fraud occurence percentage is exceeding the threshold in the past specified number of months,
+    then label it as `very_high_risk`.
+
+    Returns original DataFrame with category RiskLevel column.
+
+    Returns:
+    - DataFrame with original data and an additional column 'mcc_risk_level'
+    """
+    # Ensure date column is in datetime format
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+
+    # extract config values
+    groupby = config["groupby"]
+    target_col = config["fraud_label_col"]
+    agg_func = config["agg_func"]
+    months = config["months_period"]
+    risk_labels = config["risk_label"]
+    risk_thresholds = config["risk_threshold"]
+
+    # Define the reference window
+    max_date = df[datetime_col].max()
+    min_date = max_date - pd.DateOffset(months=months)
+
+    # Filter transactions in the reference window
+    reference_df = df[(df[datetime_col] >= min_date) & (df[datetime_col] <= max_date)]
+
+    # Group by MCC and normalized
+    agg_df = reference_df.groupby(groupby)[target_col].agg(agg_func)
+    agg_df = agg_df / agg_df.sum()
+
+    # assign risk label
+    def assign_risk(score: float) -> str:
+        if score >= risk_thresholds[0]:
+            return risk_labels[0]
+        elif score >= risk_thresholds[1]:
+            return risk_labels[1]
+        elif score >= risk_thresholds[2]:
+            return risk_labels[2]
+        else:
+            return risk_labels[3]
+
+    risk_mapping = agg_df.apply(assign_risk).to_dict()
+
+    # map risk level to original df
+    df[f"{groupby}RiskLevel"] = df[groupby].map(risk_mapping)
+
+    return df
 
 
 # Generate rolling features Pandas:
@@ -589,9 +629,9 @@ def generate_rolling_features(
         groupby_col = config.get("groupby_col", None)
         na_value = config.get("na_value", 0)
 
-        for window, out_col in tqdm(windows.items(),
-                                    desc=f"{feature_type} Windows Progress",
-                                    leave=False):
+        for window, out_col in tqdm(
+            windows.items(), desc=f"{feature_type} Windows Progress", leave=False
+        ):
             if feature_type == "frequency":
                 feature_df = calculate_frequency(
                     dataset=df,
@@ -639,7 +679,7 @@ def generate_rolling_features(
                     key=key_col,
                     out_col=out_col,
                     datetime_col=datetime_col,
-                    na_value=na_value
+                    na_value=na_value,
                 )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
