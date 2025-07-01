@@ -1,8 +1,8 @@
 WITH cte_base AS (
     SELECT
         Transaction_Serial_No,
-        PANNumber,
-        MCC,
+        COALESCE(PANNumber, '-999') AS PANNumber,
+        COALESCE(MCC, '-999') AS MCC,
         Transaction_Datetime
     FROM C03_Channel
 
@@ -10,8 +10,8 @@ WITH cte_base AS (
 
     SELECT
         Transaction_Serial_No,
-        PANNumber,
-        MCC,
+        COALESCE(PANNumber, '-999') AS PANNumber,
+        COALESCE(MCC, '-999') AS MCC,
         Transaction_Datetime
     FROM C09_Channel
 ),
@@ -31,7 +31,7 @@ cte_joined AS (
         A.PANNumber,
         A.MCC,
         A.Transaction_Datetime,
-        DATEDIFF(DAY, B.first_txn_date, A.Transaction_Datetime) AS TimeFirstTxnToCurrentMCC
+        DATEDIFF(MINUTE, B.first_txn_date, A.Transaction_Datetime) AS TimeFirstTxnToCurrentMCC
     FROM cte_base AS A
     LEFT JOIN t_min_date AS B
         ON A.PANNumber = B.PANNumber
