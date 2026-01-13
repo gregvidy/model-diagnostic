@@ -33,7 +33,7 @@ cte_final AS (
             WHERE 
                 B.PANNumber = A.PANNumber AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS CntUniqueMCCByCardNo_L15min,
 
         (
@@ -42,7 +42,7 @@ cte_final AS (
             WHERE 
                 B.PANNumber = A.PANNumber AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS CntUniqueMCCByCardNo_L30D,
 
         -- Rolling unique PANNumbers per CurrencyCode
@@ -52,7 +52,7 @@ cte_final AS (
             WHERE 
                 B.CurrencyCode = A.CurrencyCode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS CntUniqueCardNoByCurrencyCode_L15min,
 
         (
@@ -61,7 +61,7 @@ cte_final AS (
             WHERE 
                 B.CurrencyCode = A.CurrencyCode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS CntUniqueCardNoByCurrencyCode_L30D
 
     FROM cte_base AS A
@@ -71,18 +71,18 @@ SELECT
     Transaction_Serial_No,
     PANNumber,
     CntUniqueCardNoByCurrencyCode_L30D,
-    -- Safe division: if denominator is 0 or NULL, impute ratio as 0
+    -- Safe division: if denominator is 0 or NULL, impute ratio as -999
     ISNULL(
         CntUniqueCardNoByCurrencyCode_L30D / 
         NULLIF(CntUniqueCardNoByCurrencyCode_L15min, 0),
-        0        
+        -999        
     ) AS RatioCntUniqueCardNoByCurrencyCode_L30DL15min,
 
     CntUniqueMCCByCardNo_L15min,
-    -- Safe division: if denominator is 0 or NULL, impute ratio as 0
+    -- Safe division: if denominator is 0 or NULL, impute ratio as -999
     ISNULL(
         CntUniqueMCCByCardNo_L30D / 
         NULLIF(CntUniqueMCCByCardNo_L15min, 0),
-        0        
+        -999        
     ) AS RatioCntUniqueMCCByCardNo_L30DL15min,
 FROM cte_final

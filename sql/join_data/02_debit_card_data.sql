@@ -1,3 +1,7 @@
+DECLARE @sampling_percentage FLOAT = {sampling_pct};
+DECLARE @sampling_start_date DATE = '{start_date}';
+DECLARE @sampling_end_date DATE = '{end_date}';
+
 WITH tsf_debit AS (
     SELECT
     	tsf.Transaction_Serial_No
@@ -11,7 +15,7 @@ WITH tsf_debit AS (
     OR tsf.Channel = 'C10'
 )
 
-, t_base AS (
+, t_union_base AS (
     SELECT
 		c06.[Debit Account No] AS Debit_No
         , c06.[Transaction_Serial_No] AS 'Transaction Serial No'
@@ -51,10 +55,37 @@ WITH tsf_debit AS (
         ON c10.[Transaction_Serial_No] = tsf_debit.Transaction_Serial_No
 )
 
-, t_list_card_enter_alert AS (
+, t_base AS (
+    SELECT *
+    FROM t_union_base
+    WHERE [Transaction Datetime] >= CAST(@sampling_start_date AS DATE)
+    AND [Transaction Datetime] <= CAST(@sampling_end_date AS DATE)
+)
+    
+, t_list_card_ever_alert AS (
     SELECT DISTINCT Debit_No
     FROM t_base
     WHERE Confirmed = 1 OR Confirmed = 0
+)
+
+, t_list_card_never_alert AS (
+    SELECT DISTINCT t_base.Debit_No
+    FROM t_base
+    LEFT JOIN t_list_card_ever_alert
+        ON t_base.Debit_No = t_list_card_ever_alert.Debit_No
+    WHERE t_list_card_ever_alert.Debit_No IS NULL
+)
+
+, t_sample AS (
+    SELECT Debit_No
+    FROM (
+        SELECT
+            Debit_No
+            , ROW_NUMBER() OVER (ORDER BY NEWID()) AS rn
+            , COUNT(*) OVER () AS total
+        FROM t_list_card_never_alert
+    ) AS sub
+    WHERE rn <= total * @sampling_percentage
 )
 
 , t_population_ever_alert AS (
@@ -95,14 +126,31 @@ WITH tsf_debit AS (
     WHERE Confirmed IS NULL
 )
 
-/*
-    Total transactions from t_population_ever_alert CTE table is ~380K transactions
-    with Confirmed = 1 proportion only ~0.12% or 488 transactions.
+, t_population_all_clean AS (
+    SELECT
+		Debit_No
+        , [Transaction Serial No]
+		, [Transaction Datetime]
+		, [Transaction Amount]
+		, MCC
+		, [Country Code]
+		, [Card Acceptor Terminal ID]
+        , [Card Acceptor Name]
+        , [Card Acceptor City]
+        , [Card Acceptor Region]
+        , [Card Acceptor Country Code]
+		, [Currency Code]
+		, Confirmed
+    FROM t_base
+    INNER JOIN t_sample
+        ON t_base.Debit_No = t_sample.Debit_No
+)
 
-    That sample is enough since it already covers the historical clean transactions
-    and fraud transactions under same Debit_Account_No. Majority of the transactions under
-    C06 and C10 tables are also clean/never went into fraud alert.
-*/
+, t_final AS (
+	SELECT * FROM t_population_ever_alert
+	UNION ALL
+	SELECT * FROM t_population_all_clean
+)
 
 SELECT
     t_final.Debit_No

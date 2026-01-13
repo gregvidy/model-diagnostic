@@ -53,7 +53,7 @@ SELECT
             B.PANNumber = A.PANNumber AND
             B.MCC = A.MCC AND
             B.Transaction_Datetime < A.Transaction_Datetime AND
-            B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+            B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
     ) AS AvgTimeFirstTxnToCurrentMCC_Last15Mins,
 
     -- Rolling avg over last 30 days, excluding current row
@@ -64,7 +64,7 @@ SELECT
             B.PANNumber = A.PANNumber AND
             B.MCC = A.MCC AND
             B.Transaction_Datetime < A.Transaction_Datetime AND
-            B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+            B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
     ) AS AvgTimeFirstTxnToCurrentMCC_Last30D
 
 FROM cte_joined AS A;

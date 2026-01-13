@@ -32,8 +32,9 @@ dynamic_high_risk_mcc_l30d AS (
     FROM cte_joined
     WHERE
         Confirmed = 1 AND
-        Transaction_Datetime >= DATEADD(DAY, -30, GETDATE())
+        Transaction_Datetime > DATEADD(DAY, -30, GETDATE())
     GROUP BY MCC
+    ORDER BY 2 DESC
 )
 
 SELECT

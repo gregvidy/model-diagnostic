@@ -37,16 +37,16 @@ SELECT
     ISNULL(
         TotalTrxAmount1LD / 
         NULLIF(TotalTrxAmount15Mi, 0),
-        0        
+        -999        
     ) AS RatioTrxAmount_L1DL15min,
     ISNULL(
         TotalTrxAmount1LD / 
         NULLIF(TotalTrxAmount10Mi, 0),
-        0        
+        -999     
     ) AS RatioTrxAmount_L1DL10min,
     ISNULL(
         TotalTrxAmount1LD / 
         NULLIF(TotalTrxAmountL5min, 0),
-        0        
+        -999     
     ) AS RatioTrxAmount_L1DL5min,
 FROM cte_joined

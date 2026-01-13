@@ -1,7 +1,14 @@
+-- Variable settings:
+-- In this query, we sampling down the Clean transactions and deciding the start and end date
 DECLARE @sampling_percentage FLOAT = {sampling_pct};
 DECLARE @sampling_start_date DATE = '{start_date}';
 DECLARE @sampling_end_date DATE = '{end_date}';
 
+-- 3 tables that used in the query:
+-- Transaction_Summary_Fraud_Hashed
+-- C03_Details (channel)
+-- C09_Details (channel)
+-- Transaction_Summary_Calculations_Fraud_Hashed
 WITH tsf_credit AS (
     SELECT
         Transaction_Serial_No
@@ -11,6 +18,7 @@ WITH tsf_credit AS (
     OR Channel = 'C09'
 )
 
+-- Calling all the channel columns that will be used for Feature Engineering later
 , t_union_base AS (
     SELECT
 		c03.PANNumber
@@ -55,6 +63,7 @@ WITH tsf_credit AS (
         ON c09.[Transaction_Serial_No] = tsf_credit.[Transaction_Serial_No]
 )
 
+-- Sampling down the clean transactions
 , t_base AS (
     SELECT *
     FROM t_union_base

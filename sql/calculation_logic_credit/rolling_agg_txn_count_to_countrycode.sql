@@ -29,7 +29,7 @@ cte_final AS (
                 B.PANNumber = A.PANNumber AND
                 B.CountryCode = A.CountryCode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS TxnCountToCountryCode_L15min,
 
         -- 30-day window
@@ -40,7 +40,7 @@ cte_final AS (
                 B.PANNumber = A.PANNumber AND
                 B.CountryCode = A.CountryCode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS TxnCountToCountryCode_L30D,
 
     FROM cte_base AS A
@@ -51,10 +51,10 @@ SELECT
     PANNumber,
     TxnCountToCountryCode_L15min,
 
-    -- Safe division: if denominator is 0 or NULL, impute ratio as 0
+    -- Safe division: if denominator is 0 or NULL, impute ratio as -999
     ISNULL(
         TxnCountToCountryCode_L30D / 
         NULLIF(TxnCountToCountryCode_L15min, 0),
-        0        
+        -999       
     ) AS RatioTxnCountToCountryCode_L30DL15min
 FROM cte_final

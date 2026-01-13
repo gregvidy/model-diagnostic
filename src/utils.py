@@ -8,9 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def remove_highly_correlated_features(
-    df, threshold, numerical_cols, method="pearson", verbose=True
-):
+def remove_highly_correlated_features(df, threshold, numerical_cols, method="pearson"):
     """
     Remove features that are highly correlated with each other
     """
@@ -27,81 +25,79 @@ def remove_highly_correlated_features(
 
     df_reduced = df.drop(columns=to_drop)
     return df_reduced, to_drop
-
+    
 
 def plot_confusion_matrix(
-    y_true: np.ndarray, y_prob: np.ndarray, threshold: float = 0.5
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    threshold: float = 0.5
 ):
     y_pred = (y_prob >= threshold).astype(int)
-
+    
     cm = confusion_matrix(y_true, y_pred)
-
+    
     # plot using seaborn heatmap
     tn, fp, fn, tp = cm.ravel()
     labels = ["Non-Fraud", "Fraud"]
-    plt.figure(figsize=(6, 4))
-    sns.heatmap(
-        cm, annot=True, fmt="d", cmap="Blues", xticklabels=labels, yticklabels=labels
-    )
+    plt.figure(figsize=(6,4))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+                xticklabels=labels, yticklabels=labels)
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
     plt.title("Confusion Matrix")
     plt.tight_layout()
     plt.show()
-    print(
-        f"Recall/True Positive Rate: The model got {np.round(tp/(tp+fn)*100, 2)}% of correctly predicted fraud from all of the actual fraud transactions"
-    )
-    print(
-        f"Precision: The model got {np.round(tp/(tp+fp)*100, 2)}% of correctly predicted fraud from all transactions that predicted as fraud"
-    )
-    print(
-        f"False Positive Rate: The model got {np.round(fp/(fp+tn)*100, 2)}% of incorrectly predicted a fraud transactions when the actual transactions is non-fraud"
-    )
+    print(f"Recall/True Positive Rate: The model got {np.round(tp/(tp+fn)*100, 2)}% of correctly predicted fraud from all of the actual fraud transactions")
+    print(f"Precision: The model got {np.round(tp/(tp+fp)*100, 2)}% of correctly predicted fraud from all transactions that predicted as fraud")
+    print(f"Alert Rate: The model will bring {np.round(((tp+fp)/(fn+tp+fp+tn))*100, 2)}% of the records from total to the Alert rate")
 
 
 def generate_pred_df(
     X,
     y,
-    clf,
-    amount_col="Transaction Amount",
-    bin_on="pbad",
+    y_proba,
+    clf=None,
+    amount_col='Transaction Amount',
+    bin_on='pbad',
     increment_bin_rate=0.025,
-    bins=None,
+    bins=None
 ):
     """
     Generate prediction dataframe with all necessary columns for bin analysis
     """
     if bins is None:
-        bins = np.arange(0, (1 + increment_bin_rate), increment_bin_rate)
+        bins = np.arange(0, (1+increment_bin_rate), increment_bin_rate)
 
     # predict probabilities once
-    proba = clf.predict_proba(X)
-    pbad = proba[:, 1]
-    pgood = proba[:, 0]
+    if clf is not None:
+        proba = clf.predict_proba(X)
+        pbad = proba[:, 1]
+        pgood = proba[:, 0]
+    pbad = y_proba
+    pgood = 1-pbad
 
     total_trnx_amt = X[amount_col]
-    total_bad_trnx_amt = np.where(y == 1, total_trnx_amt, 0)
-    total_good_trnx_amt = np.where(y == 0, total_trnx_amt, 0)
+    total_bad_trnx_amt = np.where(y==1, total_trnx_amt, 0)
+    total_good_trnx_amt = np.where(y==0, total_trnx_amt, 0)
 
     # binning based on user selection
-    bin_target = pbad if bin_on == "pbad" else pgood
-    bin_column = pd.cut(bin_target, bins=bins, include_lowest=True, right=False)
+    bin_target = pbad if bin_on == 'pbad' else pgood
+    bin_column = pd.cut(bin_target, bins=bins,
+                        include_lowest=True, right=False)
 
     # build dataframe
-    pred_df = pd.DataFrame(
-        {
-            "trnx_id": X.index,
-            "pbad": pbad,
-            "pgood": pgood,
-            "bin": bin_column,
-            "is_bad": y,
-            "is_good": 1 - y,
-            "total_trnx_amt": total_trnx_amt,
-            "total_bad_trnx_amt": total_bad_trnx_amt,
-            "total_good_trnx_amt": total_good_trnx_amt,
-            "total_expected_loss_amt": np.round((pbad * total_trnx_amt), 2),
-        }
-    )
+    pred_df = pd.DataFrame({
+        "trnx_id": X.index,
+        "pbad": pbad,
+        "pgood": pgood,
+        "bin": bin_column,
+        "is_bad": y,
+        "is_good": 1-y,
+        "total_trnx_amt": total_trnx_amt,
+        "total_bad_trnx_amt": total_bad_trnx_amt,
+        "total_good_trnx_amt": total_good_trnx_amt,
+        "total_expected_loss_amt": np.round((pbad * total_trnx_amt), 2)
+    })
 
     return pred_df
 
@@ -136,31 +132,15 @@ def compute_bin_aggregates(pred_df):
     aggregated_df["cum_good"] = reverse_cumsum(aggregated_df["is_good"])
     aggregated_df["cum_bad"] = reverse_cumsum(aggregated_df["is_bad"])
 
-    aggregated_df["pass_through_rate"] = (
-        aggregated_df["cum_records_passed"] / total_records
-    )
-    aggregated_df["pass_through_rejected"] = (
-        aggregated_df["cum_records_rejected"] / total_records
-    )
-    aggregated_df["cum_good_rate"] = (
-        aggregated_df["cum_good"] / aggregated_df["cum_records_passed"]
-    )
-    aggregated_df["cum_bad_rate"] = (
-        aggregated_df["cum_bad"] / aggregated_df["cum_records_passed"]
-    )
+    aggregated_df["pass_through_rate"] = aggregated_df["cum_records_passed"] / total_records
+    aggregated_df["pass_through_rejected"] = aggregated_df["cum_records_rejected"] / total_records
+    aggregated_df["cum_good_rate"] = aggregated_df["cum_good"] / aggregated_df["cum_records_passed"]
+    aggregated_df["cum_bad_rate"] = aggregated_df["cum_bad"] / aggregated_df["cum_records_passed"]
 
-    aggregated_df["cum_total_trnx_amt"] = reverse_cumsum(
-        aggregated_df["total_trnx_amt"]
-    )
-    aggregated_df["cum_bad_total_trnx_amt"] = reverse_cumsum(
-        aggregated_df["total_bad_trnx_amt"]
-    )
-    aggregated_df["cum_good_total_trnx_amt"] = reverse_cumsum(
-        aggregated_df["total_good_trnx_amt"]
-    )
-    aggregated_df["cum_total_expected_loss_amt"] = reverse_cumsum(
-        aggregated_df["total_expected_loss_amt"]
-    )
+    aggregated_df["cum_total_trnx_amt"] = reverse_cumsum(aggregated_df["total_trnx_amt"])
+    aggregated_df["cum_bad_total_trnx_amt"] = reverse_cumsum(aggregated_df["total_bad_trnx_amt"])
+    aggregated_df["cum_good_total_trnx_amt"] = reverse_cumsum(aggregated_df["total_good_trnx_amt"])
+    aggregated_df["cum_total_expected_loss_amt"] = reverse_cumsum(aggregated_df["total_expected_loss_amt"])
 
     return aggregated_df
 
@@ -171,27 +151,30 @@ def get_features_by_missing_pct(
     exclude_cols: List[str] == None,
 ) -> Tuple[List[str], pd.DataFrame]:
     """
-    Get features with missing value percentage
+    Get features with missing value percentage 
     """
     # calculate percentage of missing value
     missing_pct = df.isna().mean()
 
     # build summary df
-    summary_df = pd.DataFrame(
-        {"feature": missing_pct.index, "missing_pct": missing_pct.values}
-    )
+    summary_df = pd.DataFrame({
+        'feature': missing_pct.index,
+        'missing_pct': missing_pct.values
+    })
 
     # filter out excluded columns before applying threshold
-    filtered_summary = summary_df[~summary_df["feature"].isin(exclude_cols)]
+    filtered_summary = summary_df[
+        ~summary_df['feature'].isin(exclude_cols)
+    ]
 
     # select columns meeting the threshold
-    selected_cols = filtered_summary[filtered_summary["missing_pct"] < threshold][
-        "feature"
-    ].tolist()
+    selected_cols = filtered_summary[
+        filtered_summary['missing_pct'] < threshold
+    ]['feature'].tolist()
 
     return selected_cols, summary_df
 
-
+    
 def read_query_file(query_path: Path):
     """
     Read SQL file from query path, then return it as a string
@@ -303,7 +286,7 @@ def extract_google_product(description):
 
 def extract_provider_name(description):
     # Step 1a: Convert to lowercase
-    description = description.lower() if description is not None else "NA"
+    description = description.lower() if description is not None else 'NA'
 
     # Step 1b: Directly extract product name from raw
     description = extract_google_product(description)

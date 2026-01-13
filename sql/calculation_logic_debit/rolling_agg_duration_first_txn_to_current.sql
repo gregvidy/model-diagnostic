@@ -53,7 +53,7 @@ SELECT
             B.Debit_No = A.Debit_No AND
             B.MCC = A.MCC AND
             B.Transaction_Datetime < A.Transaction_Datetime AND
-            B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+            B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
     ) AS AvgTimeFirstTxnToCurrentMCC_Last30D
 
 FROM cte_joined AS A;

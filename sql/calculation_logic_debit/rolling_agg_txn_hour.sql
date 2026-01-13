@@ -25,7 +25,7 @@ SELECT
         WHERE
             B.Debit_No = A.Debit_No AND
             B.Transaction_Datetime < A.Transaction_Datetime AND
-            B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+            B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
     ) AS AvgTxnHour_L15min,
 
     -- Rolling avg of TxnHour over last 30 days
@@ -35,7 +35,7 @@ SELECT
         WHERE
             B.Debit_No = A.Debit_No AND
             B.Transaction_Datetime < A.Transaction_Datetime AND
-            B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+            B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
     ) AS AvgTxnHour_L30D,
 
 FROM cte_base AS A

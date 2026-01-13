@@ -38,7 +38,7 @@ cte_final AS (
                 B.PANNumber = A.PANNumber AND
                 B.POSMode = A.POSMode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS TxnCountToPOSMode_L15min,
 
         -- 30-day window
@@ -49,7 +49,7 @@ cte_final AS (
                 B.PANNumber = A.PANNumber AND
                 B.POSMode = A.POSMode AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS TxnCountToPOSMode_L30D,
 
     FROM cte_base AS A
@@ -64,6 +64,6 @@ SELECT
     ISNULL(
         TxnCountToPOSMode_L30D / 
         NULLIF(TxnCountToPOSMode_L15min, 0),
-        0        
+        -999      
     ) AS RatioTxnCountToPOSMode_L30DL15min
 FROM cte_final

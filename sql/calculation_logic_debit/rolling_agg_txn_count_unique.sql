@@ -28,7 +28,7 @@ cte_final AS (
             WHERE 
                 B.MCC = A.MCC AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS CntUniqueCardNoByMCC_L15min,
 
         (
@@ -37,7 +37,7 @@ cte_final AS (
             WHERE 
                 B.MCC = A.MCC AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS CntUniqueCardNoByMCC_L30D,
 
     FROM cte_base AS A
@@ -53,7 +53,7 @@ SELECT
     ISNULL(
         CntUniqueCardNoByMCC_L30D / 
         NULLIF(CntUniqueCardNoByMCC_L15min, 0),
-        0        
+        -999     
     ) AS RatioCntUniqueCardNoByMCC_L30DL15min,
 
 FROM cte_final

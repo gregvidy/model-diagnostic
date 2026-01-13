@@ -28,7 +28,7 @@ cte_final AS (
             WHERE 
                 B.Debit_No = A.Debit_No AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS SumAmt_L30D,
         (
             SELECT AVG(A.Transaction_Amount) 
@@ -36,7 +36,7 @@ cte_final AS (
             WHERE 
                 B.Debit_No = A.Debit_No AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS AvgAmt_L30D,
         (
             SELECT MAX(A.Transaction_Amount) 
@@ -44,7 +44,7 @@ cte_final AS (
             WHERE 
                 B.Debit_No = A.Debit_No AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS MaxAmt_L30D,
 
         -- COUNT txn serial number 15-minutes and 30-day window
@@ -54,7 +54,7 @@ cte_final AS (
             WHERE 
                 B.Debit_No = A.Debit_No AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(MINUTE, -15, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(MINUTE, -15, A.Transaction_Datetime)
         ) AS TxnCount_L15min,
         (
             SELECT COUNT(*) 
@@ -62,7 +62,7 @@ cte_final AS (
             WHERE 
                 B.Debit_No = A.Debit_No AND
                 B.Transaction_Datetime < A.Transaction_Datetime AND
-                B.Transaction_Datetime >= DATEADD(DAY, -30, A.Transaction_Datetime)
+                B.Transaction_Datetime > DATEADD(DAY, -30, A.Transaction_Datetime)
         ) AS TxnCount_L30D,
 
     FROM cte_base AS A
@@ -80,6 +80,6 @@ SELECT
     ISNULL(
         TxnCount_L30D / 
         NULLIF(TxnCount_L15min, 0),
-        0        
+        -999      
     ) AS RatioTxnCount_L30DL15min
 FROM cte_final

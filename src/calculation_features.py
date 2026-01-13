@@ -10,27 +10,29 @@ from tqdm import tqdm
 # Utility Function #
 ####################
 
-
 def prepare_dask_dataframe(
     df: dd.DataFrame,
     datetime_col: str,
     partition_size: str = "500MB",
-    target_partitions: int = 50,
+    target_partitions: int = 50
 ) -> dd.DataFrame:
     """
     Prepare dask dataframe: sort index, repartition, compute divisions
     """
     # make sure datetime column is valid
-    df[datetime_col] = dd.to_datetime(df[datetime_col], errors="coerce")
+    df[datetime_col] = dd.to_datetime(df[datetime_col], errors='coerce')
     df = df.dropna(subset=[datetime_col])
 
     # early exit if dataframe becomes empty after cleaning
     if df.shape[0].compute() == 0:
         print("[INFO] Dataframe is empty after datetime cleaning.")
         return df
-
+        
     # compute min/max datetime from whole dataset
-    min_dt, max_dt = dd.compute(df[datetime_col].min(), df[datetime_col].max())
+    min_dt, max_dt = dd.compute(
+        df[datetime_col].min(),
+        df[datetime_col].max()
+    )
 
     # handle edge case if min_dt == max_dt
     if min_dt == max_dt:
@@ -38,12 +40,12 @@ def prepare_dask_dataframe(
         print("[INFO] only single timestamp found. no partitioning needed")
         df = df.set_index(datetime_col, sorted=False, compute_divisions=True)
         return df
-
+        
     # generate pre-compute divisions
     divisions = pd.date_range(
-        start=min_dt, end=max_dt, periods=target_partitions + 1
+        start=min_dt, end=max_dt, periods=target_partitions+1
     ).to_list()
-
+    
     # set index directly with divisions
     df = df.set_index(datetime_col, divisions=divisions, sorted=False)
 
@@ -55,7 +57,6 @@ def prepare_dask_dataframe(
 #####################################
 # Core Frequency Calculation (Dask) #
 #####################################
-
 
 def calculate_frequency_dask(
     dataset: dd.DataFrame,
@@ -73,12 +74,12 @@ def calculate_frequency_dask(
 
     if groupby_type == "No":
         # apply rolling count using map_overlap for time-based rolling
-        meta = {amount_col: "float64"}
+        meta = {amount_col: 'float64'}
         df_num_trnx = dataset.map_overlap(
             lambda df: df[[amount_col]].rolling(window, closed="left").count(),
             before=before_window,
-            after=pd.Timedelta("0D"),
-            meta=meta,
+            after=pd.Timedelta('0D'),
+            meta=meta
         ).fillna(na_value)
 
     else:
@@ -91,18 +92,24 @@ def calculate_frequency_dask(
                 .fillna(na_value)
                 .reset_index(level=0, drop=True)
             )
-
-        meta = {amount_col: "float64"}
+            
+        meta = {amount_col: 'float64'}
         df_num_trnx = dataset.map_overlap(
-            group_rolling, before=before_window, after=pd.Timedelta("0D"), meta=meta
+            group_rolling,
+            before=before_window,
+            after=pd.Timedelta('0D'),
+            meta=meta
         )
-
+    
     # rename output column
     df_num_trnx = df_num_trnx.rename(columns={amount_col: out_col})
 
     # join back original keys
     result = dd.merge(
-        dataset[[key, groupby]], df_num_trnx, left_index=True, right_index=True
+        dataset[[key, groupby]],
+        df_num_trnx,
+        left_index=True,
+        right_index=True
     )
 
     return result
@@ -111,7 +118,6 @@ def calculate_frequency_dask(
 ####################################
 # Core Monetary Calculation (Dask) #
 ####################################
-
 
 def calculate_monetary_dask(
     dataset: dd.DataFrame,
@@ -135,18 +141,15 @@ def calculate_monetary_dask(
 
     if groupby_type == "No":
         # case without additional groupby
-        meta = {amount_col: "float64"}
+        meta = {amount_col: 'float64'}
         df_amt_trnx = dataset.map_overlap(
-            lambda df: getattr(
-                df[[amount_col]].rolling(window, closed="left"), agg_func
-            )(),
+            lambda df: getattr(df[[amount_col]].rolling(window, closed="left"), agg_func)(),
             before=before_window,
-            after=pd.Timedelta("0D"),
-            meta=meta,
+            after=pd.Timedelta('0D'),
+            meta=meta
         ).fillna(na_value)
 
     else:
-
         def group_rolling(df):
             return (
                 df.groupby(groupby_col)
@@ -156,9 +159,12 @@ def calculate_monetary_dask(
                 .reset_index(level=0, drop=True)
             )
 
-        meta = {amount_col: "float64"}
+        meta = {amount_col: 'float64'}
         df_amt_trnx = dataset.map_overlap(
-            group_rolling, before=before_window, after=pd.Timedelta("0D"), meta=meta
+            group_rolling,
+            before=before_window,
+            after=pd.Timedelta('0D'),
+            meta=meta
         )
 
     # rename column
@@ -166,7 +172,10 @@ def calculate_monetary_dask(
 
     # merge back with original column
     result = dd.merge(
-        dataset[[key, groupby]], df_amt_trnx, left_index=True, right_index=True
+        dataset[[key, groupby]],
+        df_amt_trnx,
+        left_index=True,
+        right_index=True
     )
 
     return result
@@ -176,9 +185,11 @@ def calculate_monetary_dask(
 # Rolling Feature Generator (Dask) #
 ####################################
 
-
 def generate_rolling_features_dask(
-    df: dd.DataFrame, datetime_col: str, key_col: str, features_config: List[Dict]
+    df: dd.DataFrame,
+    datetime_col: str,
+    key_col: str,
+    features_config: List[Dict]
 ) -> dd.DataFrame:
 
     # Persist base dataframe once to avoid redundant computation
@@ -214,7 +225,7 @@ def generate_rolling_features_dask(
                 )
             # process monetary feature
             elif feature_type == "monetary":
-                agg_func = config.get("agg_func", "mean")  # default mean
+                agg_func = config.get("agg_func", "mean") # default mean
                 feature_df = calculate_monetary_dask(
                     dataset=df,
                     datetime_col=datetime_col,
@@ -226,7 +237,7 @@ def generate_rolling_features_dask(
                     window=window,
                     na_value=na_value,
                     out_col=out_col,
-                    agg_func=agg_func,
+                    agg_func=agg_func
                 )
             else:
                 raise ValueError(f"Unsupported feature type: {feature_type}")
@@ -243,7 +254,7 @@ def generate_rolling_features_dask(
     merge_keys = [key_col, groupby, datetime_col]
 
     for feature_df in feature_dfs:
-        df_final = dd.merge(df_final, feature_df, on=merge_keys, how="left")
+        df_final = dd.merge(df_final, feature_df, on=merge_keys, how='left')
 
     return df_final
 
@@ -405,7 +416,7 @@ def calculate_unique_count(
 
     # initiate result list
     results = []
-
+    
     # Compute rolling unique counts per group
     for key, group in dataset.groupby(groupby):
         group = group.set_index(datetime_col)
@@ -419,69 +430,167 @@ def calculate_unique_count(
 
     # combine back all groups
     result_df = pd.concat(results, axis=0, ignore_index=True)
-
+    
     return result_df
 
 
 def calculate_time_differences(
     df: pd.DataFrame,
     datetime_col: str,
+    groupby_col: str,
+    time_window: List[str],
     config: Dict[str, List[str]],
-    time_windows: List[str],
 ) -> pd.DataFrame:
     """
-    Calculate time differences and rolling averages between transactions.
-
+    Calculate time differences between transactions.
+    
     Parameters:
     - df: pd.DataFrame
     - datetime_col: str
-    - config: Dict[str, List[str]] - mapping of new column names to groupby columns
-    - time_windows: List[str] - list of rolling window sizes (e.g., '15T', '1H', '1D')
-
+    - groupby_col: str
+    - time_window: List[str]
+    - config: Dict[str, List[str]]
+    
     Returns:
-    - pd.DataFrame with time difference columns and their rolling averages
+    - pd.DataFrame with time differences and rolling averages
     """
-    df = df.copy()
     df[datetime_col] = pd.to_datetime(df[datetime_col])
+    df = df.sort_values(by=[groupby_col, datetime_col])
 
-    result = pd.DataFrame(index=df.index)
-
-    for new_col, groupby_cols in config.items():
-        df_sorted = df.sort_values(by=groupby_cols + [datetime_col])
+    # process each config item
+    for new_col, groupby_cols in tqdm(
+        config.items(), desc="Processing time diffs"
+    ):
+        df = df.sort_values(by=groupby_cols + [datetime_col])
 
         if len(groupby_cols) == 1:
-            result[new_col] = (
-                df_sorted.groupby(groupby_cols)[datetime_col].diff().dt.total_seconds()
-                / 60
+            # Simple time difference
+            df[new_col] = (
+                df.groupby(groupby_cols)[datetime_col]
+                .diff()
+                .dt.total_seconds() / 60
             )
         else:
+            # Conditional time difference: only when the last column changes
             primary_group = groupby_cols[0]
             change_col = groupby_cols[-1]
 
-            prev_time = df_sorted.groupby(primary_group)[datetime_col].shift(1)
-            prev_val = df_sorted.groupby(primary_group)[change_col].shift(1)
-            changed = df_sorted[change_col] != prev_val
+            # compute shifted previous time and value
+            prev_time = df.groupby(primary_group)[datetime_col].shift(1)
+            prev_val = df.groupby(primary_group)[change_col].shift(1)
+            changed = df[change_col] != prev_val
 
-            time_diff = (df_sorted[datetime_col] - prev_time).dt.total_seconds() / 60
-            result[new_col] = time_diff.where(changed, np.nan)
+            # compute time diff where change occured
+            time_diff = (
+                (df[datetime_col] - prev_time)
+                .dt.total_seconds() / 60
+            )
+            df[new_col] = time_diff.where(changed, np.nan)
 
-    # Merge time_diff columns back to df for rolling calculations
-    df = df.join(result)
+    # Rolling averages
+    for window in tqdm(time_window, desc="Calculating rolling averages"):
+        temp_df = df[
+            [datetime_col, groupby_col] + list(config.keys())
+        ].copy()
 
-    for window in time_windows:
+        # sort again if needed (minimal slice)
+        temp_df = temp_df.sort_values(
+            by=[groupby_col, datetime_col]
+        ).set_index(datetime_col)
+
         for new_col in config.keys():
             rolled = (
-                df.sort_values(by=[config[new_col][0], datetime_col])
-                .set_index(datetime_col)
-                .groupby(config[new_col][0])[new_col]
+                temp_df.groupby(groupby_col)[new_col]
                 .rolling(window=window)
                 .mean()
                 .reset_index(level=0, drop=True)
             )
-            result[f"avg_{new_col}_L{window}"] = rolled.sort_index().values
-    return result
+            df[f"avg_{new_col}_L{window}"] = rolled.values
+
+    return df
 
 
+def calculate_rolling_txn_hour(
+    df: pd.DataFrame, group_col: str, datetime_col: str, windows: List[str]
+) -> pd.DataFrame:
+    """
+    Compute grouped rolling average of transaction hour per group
+    over time windows
+    """
+    df = df.copy()
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+    df["TxnHour"] = df[datetime_col].dt.hour
+
+    # container for results
+    result = []
+
+    # apply group-wise rolling
+    for group_value, group_df in tqdm(
+        df.groupby(group_col), desc="Processing TxnHour Rolling Avg"
+    ):
+        group_df = group_df.sort_values(datetime_col).set_index(datetime_col)
+
+        # for each window, apply group wise rolling
+        for window in windows:
+            if window == "900S":
+                col_name = "AvgTxnHourL15min"
+            else:
+                col_name = f"AvgTxnHourL{window}"
+            group_df[col_name] = (
+                group_df["TxnHour"].rolling(window=window, min_periods=1).mean()
+            )
+
+        # restore group column
+        group_df[group_col] = group_value
+        result.append(group_df.reset_index())
+
+    # concatenate all groupes
+    df_final = pd.concat(result, ignore_index=False)
+    return df_final
+
+
+def create_ratio_features(
+    df: pd.DataFrame,
+    feature_list: str,
+    replace_str_numerator: str = "L15min",
+    replace_str_denominator: str = "L30D",
+    default_value: float = -999,
+) -> pd.DataFrame:
+    """
+    Automatically creates ratio features of the form L30D, L15min
+    for matching base features from provided feature list
+    """
+    numer_feats = {
+        col.replace(replace_str_numerator, ""): col
+        for col in feature_list
+        if replace_str_numerator in col
+    }
+    denom_feats = {
+        col.replace(replace_str_denominator, ""): col
+        for col in feature_list
+        if replace_str_denominator in col
+    }
+
+    # find matching base feature name
+    matching_bases = set(numer_feats.keys()) & set(denom_feats.keys())
+
+    # create ratio features
+    for base in matching_bases:
+        col_15m = numer_feats[base]
+        col_30d = denom_feats[base]
+        new_col = f"Ratio{base}{replace_str_denominator}{replace_str_numerator}"
+
+        # calulate the ratio with save division
+        ratio = df[col_30d] / df[col_15m]
+        ratio = ratio.replace([np.inf, -np.inf], np.nan)
+
+        # fill 0/0 or NaNs or infinities with default value
+        df[new_col] = ratio.fillna(default_value)
+
+    return df
+
+
+# calculate duration since first time trnx
 def calculate_duration_since_first_trnx(
     dataset: pd.DataFrame,
     groupby: str,
@@ -490,43 +599,32 @@ def calculate_duration_since_first_trnx(
     key: str,
     out_col: str,
     datetime_col: str,
-    agg_func: str = "mean",
+    agg_func: str = 'mean',
     na_value: float = 0.0,
 ) -> pd.DataFrame:
     """
-    Calculate duration in minutes between the first transaction and each subsequent transaction
-    for each group defined in the config.
-
-    Parameters:
-    - df: pd.DataFrame
-    - datetime_col: str - name of the datetime column
-    - config: Dict - configuration with keys:
-        - groupby: primary grouping column (e.g., PANNumber)
-        - groupby_col: target column (e.g., MCC)
-        - windows: dict of {window: output_column_name}
-
-    Returns:
-    - pd.DataFrame with rolling duration features
+    Calculate duration in mintues between the first transaction and each subsequent
+    transaction for each group defined in the config
     """
     df = dataset.copy()
     df[datetime_col] = pd.to_datetime(df[datetime_col])
     df = df.sort_values(by=[groupby, datetime_col])
 
-    # Get first transaction time per target group within each primary group
-    df[f"first_txn_time_by_{groupby_col}"] = df.groupby([groupby, groupby_col])[
+    # get first transaction time per target group within each primary group
+    df[f"FirstTxnTimeBy{groupby_col}"] = df.groupby([groupby, groupby_col])[
         datetime_col
     ].transform("first")
 
-    # Calculate duration in minutes
-    amount_col = f"DurationSince_FirstTrnx_to_Current_{groupby_col}"
+    # calculate duration in minutes
+    amount_col = f"DurationSinceFirstTrnxToCurrent{groupby_col}"
     df[amount_col] = (
-        df[datetime_col] - df[f"first_txn_time_by_{groupby_col}"]
+        df[datetime_col] - df[f"FirstTxnTimeBy{groupby_col}"]
     ).dt.total_seconds() / 60
 
     if agg_func not in ["mean", "max", "sum"]:
         raise ValueError("agg_func must be one of: 'mean', 'max', 'sum'")
 
-    # Rolling features
+    # rolling features
     df_rolling = df.copy()
     df_duration_trnx_time = (
         df_rolling.set_index(datetime_col)
@@ -542,65 +640,11 @@ def calculate_duration_since_first_trnx(
     df_duration_trnx_time = df_duration_trnx_time.drop_duplicates(
         subset=[groupby, datetime_col], keep="last"
     )
-    dataset_TJ = df[[key, groupby, datetime_col, amount_col]].copy()
+    dataset_TJ = df[[key, groupby, datetime_col]].copy()
     join_data = dataset_TJ.merge(
         df_duration_trnx_time, how="left", on=[groupby, datetime_col]
     )
-    return join_data[[key, groupby, datetime_col, amount_col, out_col]]
-
-
-def label_risk_level_category(
-    df: pd.DataFrame, datetime_col: str, config: Dict[str, List[str]]
-):
-    """
-    Labels a category as very-high risk, high risk, etc. For example: if their MCC aggregated
-    fraud occurence percentage is exceeding the threshold in the past specified number of months,
-    then label it as `very_high_risk`.
-
-    Returns original DataFrame with category RiskLevel column.
-
-    Returns:
-    - DataFrame with original data and an additional column 'mcc_risk_level'
-    """
-    # Ensure date column is in datetime format
-    df[datetime_col] = pd.to_datetime(df[datetime_col])
-
-    # extract config values
-    groupby = config["groupby"]
-    target_col = config["fraud_label_col"]
-    agg_func = config["agg_func"]
-    months = config["months_period"]
-    risk_labels = config["risk_label"]
-    risk_thresholds = config["risk_threshold"]
-
-    # Define the reference window
-    max_date = df[datetime_col].max()
-    min_date = max_date - pd.DateOffset(months=months)
-
-    # Filter transactions in the reference window
-    reference_df = df[(df[datetime_col] >= min_date) & (df[datetime_col] <= max_date)]
-
-    # Group by MCC and normalized
-    agg_df = reference_df.groupby(groupby)[target_col].agg(agg_func)
-    agg_df = agg_df / agg_df.sum()
-
-    # assign risk label
-    def assign_risk(score: float) -> str:
-        if score >= risk_thresholds[0]:
-            return risk_labels[0]
-        elif score >= risk_thresholds[1]:
-            return risk_labels[1]
-        elif score >= risk_thresholds[2]:
-            return risk_labels[2]
-        else:
-            return risk_labels[3]
-
-    risk_mapping = agg_df.apply(assign_risk).to_dict()
-
-    # map risk level to original df
-    df[f"{groupby}RiskLevel"] = df[groupby].map(risk_mapping)
-
-    return df
+    return join_data[[key, groupby, datetime_col, out_col]]
 
 
 # Generate rolling features Pandas:
@@ -629,9 +673,9 @@ def generate_rolling_features(
         groupby_col = config.get("groupby_col", None)
         na_value = config.get("na_value", 0)
 
-        for window, out_col in tqdm(
-            windows.items(), desc=f"{feature_type} Windows Progress", leave=False
-        ):
+        for window, out_col in tqdm(windows.items(),
+                                    desc=f"{feature_type} Windows Progress",
+                                    leave=False):
             if feature_type == "frequency":
                 feature_df = calculate_frequency(
                     dataset=df,
@@ -671,14 +715,15 @@ def generate_rolling_features(
                     agg_func=agg_func,
                 )
             elif feature_type == "first_trnx_duration":
+                agg_func = config.get("agg_func", "mean") # Default to mean
                 feature_df = calculate_duration_since_first_trnx(
                     dataset=df,
+                    datetime_col=datetime_col,
+                    key=key_col,
                     groupby=groupby,
                     groupby_col=groupby_col,
                     window=window,
-                    key=key_col,
                     out_col=out_col,
-                    datetime_col=datetime_col,
                     na_value=na_value,
                 )
             else:
@@ -687,7 +732,7 @@ def generate_rolling_features(
             all_feature_dfs.append((feature_df, [key_col, groupby, datetime_col]))
 
     # Merge all features with original df using appropriate keys
-    df_merged = df.copy()
+    df_merged = df
     for feat_df, merge_keys in all_feature_dfs:
         df_merged = pd.merge(
             df_merged,
@@ -697,6 +742,47 @@ def generate_rolling_features(
         )
 
     return df_merged
+
+
+# label risk level category
+def label_risk_level_category(
+    df: pd.DataFrame,
+    datetime_col: str,
+    config: Dict[str, List[str]]
+) -> pd.DataFrame:
+    """
+    Labels top N high risk categories based on frequency of fraud occurence
+    in a defined past period. Adds a binary column indicating if the transaction
+    belons to a top N high-risk category
+    """
+    # ensure date column is in datetime format
+    df[datetime_col] = pd.to_datetime(df[datetime_col])
+
+    # extract config values
+    groupby = config["groupby"]
+    target_col = config["fraud_label_col"]
+    agg_func = config["agg_func"]
+    months = config["months_period"]
+    top_n = config["top_n"]
+
+    # define reference window
+    max_date = df[datetime_col].max()
+    min_date = max_date - pd.DateOffset(months=months)
+
+    # filter transactions in reference window
+    reference_df = df[(df[datetime_col] >= min_date) & (df[datetime_col] <= max_date)]
+
+    # group by category and calculate fraud frequency
+    agg_df = reference_df.groupby(groupby)[target_col].agg(agg_func)
+
+    # sort and take top N high-risk categories
+    top_n_risky = agg_df.sort_values(ascending=False).head(top_n).index.tolist()
+
+    # create binary indicator column in original dataframe
+    binary_col_name = f"IsTop{top_n}HighRisk{groupby}Last{months*30}D"
+    df[binary_col_name] = df[groupby].isin(top_n_risky).astype(int)
+
+    return df
 
 
 # example usage
